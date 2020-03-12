@@ -130,9 +130,6 @@ public class GameScreen implements Screen{
 	private ArrayList<StatBar> fortressHealthBars = new ArrayList<>();
 	// STATBAR_REFACTOR_6 - END OF MODIFICATION  - NP STUDIOS
 
-
-
-
 	/**
 	 * extended
 	 * @param _game
