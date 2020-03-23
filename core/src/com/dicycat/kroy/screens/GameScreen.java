@@ -63,13 +63,13 @@ public class GameScreen implements Screen{
 	private int healthMultiplierIndex = 2;
 
 	// DIFFICULTY_1 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
-	
+
 	public Kroy game;
 	public GameTextures textures;
 	public static float gameTimer; //Timer to destroy station
 
 	
-	
+
 	public GameScreenState state = GameScreenState.RUN;
 	
 	public static TiledGameMap gameMap;
@@ -81,7 +81,7 @@ public class GameScreen implements Screen{
 	private PauseWindow pauseWindow;
 	private OptionsWindow optionsWindow;
 
-	
+
 	private Float[][] truckStats = {	//extended
 										//Each list is a configuration of a specific truck. {speed, speed + damage , damage , capacity+range, capacity, range}
 			{400f, 1f, 400f, 300f},		//Speed
@@ -129,7 +129,7 @@ public class GameScreen implements Screen{
 	private ArrayList<StatBar> tankbars = new ArrayList<StatBar>();
 	private ArrayList<StatBar> fortressHealthBars = new ArrayList<>();
 	// STATBAR_REFACTOR_6 - END OF MODIFICATION  - NP STUDIOS
-	
+
 
 
 
