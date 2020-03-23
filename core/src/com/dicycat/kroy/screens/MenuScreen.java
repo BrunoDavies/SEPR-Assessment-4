@@ -209,7 +209,7 @@ public class MenuScreen implements Screen{
 		fireTruckSelector.truckButton1.addListener(new ClickListener() {
 			@Override
 	    	public void clicked(InputEvent event, float x, float y) {
-				startGame(0);//Game begun with 0 (Speed) as the truck selected
+				startGame(0, 0);//Game begun with 0 (Speed) as the truck selected
 				HUD.setScore(100000);
 	    	}
 	    });
@@ -217,7 +217,7 @@ public class MenuScreen implements Screen{
 		fireTruckSelector.truckButton2.addListener(new ClickListener() {
 	    	@Override
 	    	public void clicked(InputEvent event, float x, float y) {
-	    		startGame(1);//Game begun with 1 (Speed + Damage) as the truck selected
+	    		startGame(1, 1);//Game begun with 1 (Speed + Damage) as the truck selected
 	    		HUD.setScore(100000);
 	    	}
 	    });
@@ -225,7 +225,7 @@ public class MenuScreen implements Screen{
 		fireTruckSelector.truckButton3.addListener(new ClickListener() {
 	    	@Override
 	    	public void clicked(InputEvent event, float x, float y) {
-	    		startGame(2);//Game begun with 2 (Damage) as the truck selected
+	    		startGame(2, 2);//Game begun with 2 (Damage) as the truck selected
 	    		HUD.setScore(100000);
 	    	}
 	    });
@@ -233,7 +233,7 @@ public class MenuScreen implements Screen{
 		fireTruckSelector.truckButton4.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				startGame(3);//Game begun with 3 (Capacity + Range) as the truck selected
+				startGame(3, 0);//Game begun with 3 (Capacity + Range) as the truck selected
 				HUD.setScore(100000);
 				
 			}
@@ -242,7 +242,7 @@ public class MenuScreen implements Screen{
 		fireTruckSelector.truckButton5.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				startGame(4);//Game begun with 4 (Capacity) as the truck selected
+				startGame(4, 0);//Game begun with 4 (Capacity) as the truck selected
 				HUD.setScore(100000);
 				
 			}
@@ -251,7 +251,7 @@ public class MenuScreen implements Screen{
 		fireTruckSelector.truckButton6.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
-				startGame(5);//Game begun with 5 (Range) as the truck selected
+				startGame(5, 0);//Game begun with 5 (Range) as the truck selected
 				HUD.setScore(100000);
 				
 			}
@@ -263,10 +263,10 @@ public class MenuScreen implements Screen{
 	 * 
 	 * @param truckNum Type of truck selected
  	 */
-	public void startGame(int truckNum) {
+	public void startGame(int truckNum, int difficultyChosen) {
 		 if (!currentlyRunningGame) {	// Checks if a new GameScreen is currently running and either makes one or ignores the commands
 			 currentlyRunningGame = true; // Makes sure that only one GameScreen is opened at once
-			 game.newGame(truckNum); // Calls the function in Kroy to start a new game
+			 game.newGame(truckNum, difficultyChosen); // Calls the function in Kroy to start a new game
 		 }
 	} 
 	

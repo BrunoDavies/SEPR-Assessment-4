@@ -47,11 +47,28 @@ public class GameScreen implements Screen{
 		RESUME,
 		OPTIONS
 	}
+
+
+	// DIFFICULTY_1 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
+	private int difficultyChosen; //hold the int value of the difficulty selected : 0 - easy, 1 - med, 2 - hard
+	private float[][] difficultyStats = { //difficultyChosen will relate to this 2D array and select the correct one
+			{2f, 2f, 2f},		//Easy: 2 aliens per patrol, 2x the tank size, 2x the health
+			{1f, 1f, 1f},		//Medium : 4 aliens per patrol, 1x the tank size, 1x the health
+			{0.5f, 0.5f, 1f}   //Hard: 8 aliens per patrol, 0.5x the tank size, 0.5x the health
+	};
+
+	//indicates the index number for the modification. Thus do not need to remember
+	private int partolNumberIndex = 0;
+	private int tankMultiplierIndex = 1;
+	private int healthMultiplierIndex = 2;
+
+	// DIFFICULTY_1 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 	
 	public Kroy game;
 	public GameTextures textures;
 	public static float gameTimer; //Timer to destroy station
 
+	
 	
 	public GameScreenState state = GameScreenState.RUN;
 	
@@ -64,6 +81,7 @@ public class GameScreen implements Screen{
 	private PauseWindow pauseWindow;
 	private OptionsWindow optionsWindow;
 
+	
 	private Float[][] truckStats = {	//extended
 										//Each list is a configuration of a specific truck. {speed, speed + damage , damage , capacity+range, capacity, range}
 			{400f, 1f, 400f, 300f},		//Speed
@@ -83,7 +101,7 @@ public class GameScreen implements Screen{
             {600f, 20f},
             {700f, 25f},
             {800f, 30f},
-    }; //[UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS]
+    }; 
 	
 	
 	private int truckNum; // Identifies the truck thats selected in the menu screen
@@ -111,13 +129,17 @@ public class GameScreen implements Screen{
 	private ArrayList<StatBar> tankbars = new ArrayList<StatBar>();
 	private ArrayList<StatBar> fortressHealthBars = new ArrayList<>();
 	// STATBAR_REFACTOR_6 - END OF MODIFICATION  - NP STUDIOS
+	
+
+
 
 	/**
 	 * extended
 	 * @param _game
 	 * @param truckNum
 	 */
-	public GameScreen(Kroy _game, int truckNum) {
+	public GameScreen(Kroy _game, int truckNum, int difficultyChosen) {
+		this.difficultyChosen = difficultyChosen;
 		game = _game;
 		gamecam = new OrthographicCamera();
 		gameport = new FitViewport(Kroy.width, Kroy.height, gamecam);	//Mic:could also use StretchViewPort to make the screen stretch instead of adapt
@@ -148,9 +170,27 @@ public class GameScreen implements Screen{
 		fortressSizes.add(new Vector2(450, 256));
 		fortressesCount = 6;
 		
-		patrolUpdateRate = 30;
+
+
+		// DIFFICULTY_2 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
+		//changes the spawn rate of UFO's, lower for easier, higher for harder.
+		patrolUpdateRate = (int)((float)30* (difficultyStats[difficultyChosen][partolNumberIndex]));
+
+		updateTruckStats(); //ensures that the stats are correct with current difficulty selected
+		// DIFFICULTY_2 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
+
 	}
-	
+
+	// DIFFICULTY_4 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
+	//Updates the stats of firetruck with selected level.
+	public void updateTruckStats() {
+		for (int i=0; i<6; i++){ //loops through all of truckstats
+			//modifies each trucks stat with the multiplier of that difficulty
+			truckStats[i][2] = truckStats[i][2]*(float)difficultyStats[difficultyChosen][tankMultiplierIndex];
+		}
+	}
+	// DIFFICULTY_4 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
+
 
 	/**
 	 * Screen first shown
@@ -168,7 +208,16 @@ public class GameScreen implements Screen{
 			fortressInit(i);
 		}
 		gameObjects.add(new FireStation(textures.getFireStation(), textures.getFireStationDead()));
-		switchTrucks(truckNum);  
+		switchTrucks(truckNum);
+
+		// DIFFICULTY_6 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
+		//loops through all the firetrucks
+		for (FireTruck truck : firetrucks) {
+			//sets the new max health to the standard max health times by a multiplier for the difficulty selected.
+			truck.setMaxHealthPointsForDifficulty	(truck.getMaxHealthPoints()*
+											(int)difficultyStats[difficultyChosen][healthMultiplierIndex]);
+		}
+		// DIFFICULTY_6 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 
 		gamecam.translate(new Vector2(currentTruck.getX(), currentTruck.getY())); // sets initial Camera position
 	}
@@ -584,7 +633,7 @@ public class GameScreen implements Screen{
 	 * @param won Did the player reach the win state?
 	 */
 	public void gameOver(boolean won) {
-		game.setScreen(new GameOverScreen(game, truckNum, won));
+		game.setScreen(new GameOverScreen(game, truckNum, won, difficultyChosen));
 	}
 
 	/**

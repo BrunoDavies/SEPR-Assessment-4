@@ -74,13 +74,15 @@ public class GameOverScreen implements Screen {
 	private Pixmap pm = new Pixmap(Gdx.files.internal("handHD2.png")); // cursor
 	private int xHotSpot = pm.getWidth() / 3; // where the cursor's aim is
 	private int yHotSpot = 0;
+	
+	private int difficultyChosen;
 
 	/**
 	 * @param game
 	 * @param truckNum
 	 * @param result
 	 */
-	public GameOverScreen(Kroy game, int truckNum, Boolean result) {
+	public GameOverScreen(Kroy game, int truckNum, Boolean result, int difficultyChosen) {
 		this.game = game;
 		this.result = result;
 		gamecam = new OrthographicCamera(); // m
@@ -125,6 +127,8 @@ public class GameOverScreen implements Screen {
 		table.add(highScoreNumberLabel).padRight(padScore);
 
 		stage.addActor(table);
+		
+		this.difficultyChosen = difficultyChosen;
 	}
 
 	@Override
@@ -163,7 +167,7 @@ public class GameOverScreen implements Screen {
 			if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 				this.dispose();
 				game.batch.end();
-				game.newGame(truckNum);
+				game.newGame(truckNum, difficultyChosen);
 				return;
 			}
 		} else {
