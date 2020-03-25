@@ -202,61 +202,38 @@ public class MenuScreen implements Screen{
   
 	/**
 	 * Checks if any of the buttons have been pressed
-	 * and the number of the fireTruck type is passed to the new GameScreen
+	 * and then starts the game with the buttons corresponding difficulty
 	 */
+
+	// DIFFICULTY_7 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 	public void clickCheck() {
 		//Truck 1 Selected
-		fireTruckSelector.truckButton1.addListener(new ClickListener() {
+		fireTruckSelector.difficultyButtonEasy.addListener(new ClickListener() {
 			@Override
 	    	public void clicked(InputEvent event, float x, float y) {
-				startGame(0, 0);//Game begun with 0 (Speed) as the truck selected
+				startGame(0, 0);//Game begun with easy difficulty
 				HUD.setScore(100000);
 	    	}
 	    });
 		//Truck 2 Selected
-		fireTruckSelector.truckButton2.addListener(new ClickListener() {
+		fireTruckSelector.difficultyButtonMedium.addListener(new ClickListener() {
 	    	@Override
 	    	public void clicked(InputEvent event, float x, float y) {
-	    		startGame(1, 1);//Game begun with 1 (Speed + Damage) as the truck selected
+	    		startGame(0, 1);//Game begun with medium difficulty
 	    		HUD.setScore(100000);
 	    	}
 	    });
 		//Truck 3 Selected
-		fireTruckSelector.truckButton3.addListener(new ClickListener() {
+		fireTruckSelector.difficultyButtonHard.addListener(new ClickListener() {
 	    	@Override
 	    	public void clicked(InputEvent event, float x, float y) {
-	    		startGame(2, 2);//Game begun with 2 (Damage) as the truck selected
+	    		startGame(0, 2);//Game begun with medium difficulty
 	    		HUD.setScore(100000);
 	    	}
 	    });
-		//Truck 4 Selected
-		fireTruckSelector.truckButton4.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				startGame(3, 0);//Game begun with 3 (Capacity + Range) as the truck selected
-				HUD.setScore(100000);
-				
-			}
-	    });
-		//Truck 5 Selected
-		fireTruckSelector.truckButton5.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				startGame(4, 0);//Game begun with 4 (Capacity) as the truck selected
-				HUD.setScore(100000);
-				
-			}
-	    });
-		//Truck 6 Selected
-		fireTruckSelector.truckButton6.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				startGame(5, 0);//Game begun with 5 (Range) as the truck selected
-				HUD.setScore(100000);
-				
-			}
-	    });
+
 	}
+	// DIFFICULTY_7 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 
 
 	/**

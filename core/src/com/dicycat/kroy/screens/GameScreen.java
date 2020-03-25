@@ -52,9 +52,9 @@ public class GameScreen implements Screen{
 	// DIFFICULTY_1 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 	private int difficultyChosen; //hold the int value of the difficulty selected : 0 - easy, 1 - med, 2 - hard
 	private float[][] difficultyStats = { //difficultyChosen will relate to this 2D array and select the correct one
-			{2f, 2f, 2f},		//Easy: 2 aliens per patrol, 2x the tank size, 2x the health
-			{1f, 1f, 1f},		//Medium : 4 aliens per patrol, 1x the tank size, 1x the health
-			{0.5f, 0.5f, 1f}   //Hard: 8 aliens per patrol, 0.5x the tank size, 0.5x the health
+			{2f, 2f, 2f},		//Easy: time to spawn a patrol is 2x (30 -> 60), 2x the tank size, 2x the health
+			{1f, 1f, 1f},		//Medium :  time to spawn a patrol is 1x (30 -> 30), 1x the tank size, 1x the health
+			{0.5f, 0.5f, 0.5f}   //Hard:  time to spawn a patrol is 0.5x (30 -> 15), 0.5x the tank size, 0.5x the health
 	};
 
 	//indicates the index number for the modification. Thus do not need to remember
@@ -214,8 +214,8 @@ public class GameScreen implements Screen{
 		//loops through all the firetrucks
 		for (FireTruck truck : firetrucks) {
 			//sets the new max health to the standard max health times by a multiplier for the difficulty selected.
-			truck.setMaxHealthPointsForDifficulty	(truck.getMaxHealthPoints()*
-											(int)difficultyStats[difficultyChosen][healthMultiplierIndex]);
+			truck.setMaxHealthPointsForDifficulty((int)(truck.getMaxHealthPoints()*
+											(double)difficultyStats[difficultyChosen][healthMultiplierIndex]));
 		}
 		// DIFFICULTY_6 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 
