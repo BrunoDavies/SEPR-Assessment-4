@@ -28,7 +28,7 @@ public class UFO extends Entity {
 	 * @param bulletDir Where our bullet is shooting
 	 */
 	Vector2 spawnPos;
-	private float speed = 300f;
+	private float speed = 150f;
 	protected int direction = 0;
 	private float movetimer = 0;
 

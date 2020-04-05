@@ -52,15 +52,18 @@ public class GameScreen implements Screen{
 	// DIFFICULTY_1 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 	private int difficultyChosen; //hold the int value of the difficulty selected : 0 - easy, 1 - med, 2 - hard
 	private float[][] difficultyStats = { //difficultyChosen will relate to this 2D array and select the correct one
-			{2f, 2f, 2f},		//Easy: time to spawn a patrol is 2x (30 -> 60), 2x the tank size, 2x the health
-			{1f, 1f, 1f},		//Medium :  time to spawn a patrol is 1x (30 -> 30), 1x the tank size, 1x the health
-			{0.5f, 0.5f, 0.5f}   //Hard:  time to spawn a patrol is 0.5x (30 -> 15), 0.5x the tank size, 0.5x the health
+			{2f, 2f, 2f, 2f},        //Easy: time to spawn a patrol is 2x (30 -> 60), 2x the tank size, 2x the health, max of 2 aliens (UFOs) per fortress
+			{1f, 1f, 1f, 4f},        //Medium :  time to spawn a patrol is 1x (30 -> 30), 1x the tank size, 1x the health, max of 4 aliens (UFOs) per fortress
+			{0.5f, 0.5f, 0.5f, 8f}, //Hard:  time to spawn a patrol is 0.5x (30 -> 15), 0.5x the tank size, 0.5x the health, max of 8 aliens (UFOs) per fortress
 	};
 
 	//indicates the index number for the modification. Thus do not need to remember
 	private int partolNumberIndex = 0;
 	private int tankMultiplierIndex = 1;
 	private int healthMultiplierIndex = 2;
+	private int patrolMaxIndex = 3;
+
+	private int numberOfPatrolsSpawned = 0; //The number of patrols already spawned
 
 	// DIFFICULTY_1 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 
@@ -336,6 +339,7 @@ public class GameScreen implements Screen{
 		}
 
 		currentTruck.update();
+
 		if (Gdx.input.isKeyPressed(Keys.PLUS)) {
 		}
 		
@@ -361,24 +365,26 @@ public class GameScreen implements Screen{
 		switchTrucks();
 
 		lastPatrol += Gdx.graphics.getDeltaTime();
-		if (lastPatrol >= patrolUpdateRate) {
-			lastPatrol = 0;
+		if(numberOfPatrolsSpawned <= difficultyStats[difficultyChosen][patrolMaxIndex]) {
+			if (lastPatrol >= patrolUpdateRate) {
+				lastPatrol = 0;
 
-			//we should spawn a patrol near every fortress if it given it's been 10 secs.
-			for (Vector2 position: patrolPositions) {
+				//we should spawn a patrol near every fortress if it given it's been 10 secs.
+				for (Vector2 position : patrolPositions) {
 
-				//Randomize the positions a little bit
-				float oldX = position.x;
-				float oldY = position.y;
-				float randX = (float) (oldX - 400 + Math.random() * 400);
-				float randY = (float) (oldY - 400 + Math.random() * 400);
-
-				gameObjects.add(new UFO(new Vector2(randX, randY), textures.getUFO(), textures.getBullet()));
+					//Randomize the positions a little bit
+					float oldX = position.x;
+					float oldY = position.y;
+					float randX = (float) (oldX - 400 + Math.random() * 400);
+					float randY = (float) (oldY - 400 + Math.random() * 400);
 
 
+					gameObjects.add(new UFO(new Vector2(randX, randY), textures.getUFO(), textures.getBullet()));
+
+
+				}
 			}
 		}
-
 	}
 	
 	/**
