@@ -309,7 +309,7 @@ public class FireTruck extends Entity{
 
 	/**
 	 * Returns an array of all enemy GameObjects in range
-	 * @return
+	 * @return`
 	 */
 	private ArrayList<GameObject> entitiesInRange(){
 		ArrayList<GameObject> outputArray = new ArrayList<GameObject>();	//create array list to output enemies in range
@@ -446,5 +446,6 @@ public class FireTruck extends Entity{
 		return this.defenceUp;
 	}
 	//POWERUPS_13 - END OF MODIFICATION - NPSTUDIOS
+
 
 }
