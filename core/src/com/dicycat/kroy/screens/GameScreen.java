@@ -671,21 +671,21 @@ public class GameScreen implements Screen{
 		float cameraX = Math.max(0.5f*Kroy.width*zoom, Math.min(currentTruck.getX(), 6884-(0.5f*Kroy.width*zoom)));
 		float cameraY = Math.max(0.5f*Kroy.height*zoom, Math.min(currentTruck.getY(), 6043-(0.5f*Kroy.height*zoom)));
 		gamecam.position.lerp(new Vector3(cameraX, cameraY,gamecam.position.z),0.1f);// sets the new camera position based on the current position of the FireTruck
-        Vector2 tempBoi = new Vector2(gamecam.position.x - 260, gamecam.position.y + 327);
+        Vector2 iconPosition = new Vector2(gamecam.position.x - 260, gamecam.position.y + 327);
         if (timeIncreaseIcon.isEnabled()) {
-            timeIncreaseIcon.setPosition(tempBoi);
+            timeIncreaseIcon.setPosition(iconPosition);
         }
         if (freezeEnemiesIcon.isEnabled()){
-            tempBoi = new Vector2 (gamecam.position.x + 130, gamecam.position.y + 327);
-            freezeEnemiesIcon.setPosition(tempBoi);
+			iconPosition = new Vector2 (gamecam.position.x + 130, gamecam.position.y + 327);
+            freezeEnemiesIcon.setPosition(iconPosition);
         }
         if (rainDanceIcon.isEnabled()){
-            tempBoi = new Vector2 (gamecam.position.x + 170, gamecam.position.y + 327);
-            rainDanceIcon.setPosition(tempBoi);
+			iconPosition = new Vector2 (gamecam.position.x + 170, gamecam.position.y + 327);
+            rainDanceIcon.setPosition(iconPosition);
         }
         if (revivedFireTruckIcon.isEnabled()){
-            tempBoi = new Vector2 (gamecam.position.x  + 500, gamecam.position.y + 327);
-            revivedFireTruckIcon.setPosition(tempBoi);
+			iconPosition = new Vector2 (gamecam.position.x  + 500, gamecam.position.y + 327);
+            revivedFireTruckIcon.setPosition(iconPosition);
         }
 		gamecam.update();
 
