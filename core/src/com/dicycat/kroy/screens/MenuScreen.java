@@ -270,54 +270,34 @@ public class MenuScreen implements Screen{
   
 	/**
 	 * Checks if any of the buttons have been pressed
-	 * and the number of the fireTruck type is passed to the new GameScreen
+	 * and then starts the game with the buttons corresponding difficulty
 	 */
+
+	// DIFFICULTY_7 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 	public void clickCheck() {
 		//Truck 1 Selected
-		fireTruckSelector.truckButton1.addListener(new ClickListener() {
+		fireTruckSelector.difficultyButtonEasy.addListener(new ClickListener() {
 			@Override
-	    	public void clicked(InputEvent event, float x, float y) {
-				startGame();//Game begun with 0 (Speed) as the truck selected
-				HUD.setScore(100000);
-	    	}
-	    });
-		//Truck 2 Selected
-		fireTruckSelector.truckButton2.addListener(new ClickListener() {
-	    	@Override
-	    	public void clicked(InputEvent event, float x, float y) {
-	    		startGame();//Game begun with 1 (Speed + Damage) as the truck selected
-	    		HUD.setScore(100000);
-	    	}
-	    });
-		//Truck 3 Selected
-		fireTruckSelector.truckButton3.addListener(new ClickListener() {
-	    	@Override
-	    	public void clicked(InputEvent event, float x, float y) {
-	    		startGame();//Game begun with 2 (Damage) as the truck selected
-	    		HUD.setScore(100000);
-	    	}
-	    });
-		//Truck 4 Selected
-		fireTruckSelector.truckButton4.addListener(new ChangeListener() {
-			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				startGame();//Game begun with 3 (Capacity + Range) as the truck selected
+			public void clicked(InputEvent event, float x, float y) {
+				startGame(0, 0);//Game begun with easy difficulty
 				HUD.setScore(100000);
 			}
 		});
-		//Truck 5 Selected
-		fireTruckSelector.truckButton5.addListener(new ChangeListener() {
+		//Truck 2 Selected
+		fireTruckSelector.difficultyButtonMedium.addListener(new ClickListener() {
 			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				startGame();//Game begun with 4 (Capacity) as the truck selected
+			public void clicked(InputEvent event, float x, float y) {
+
+				startGame(0, 1);//Game begun with medium difficulty
 				HUD.setScore(100000);
 			}
-			    });
-		//Truck 6 Selected
-		fireTruckSelector.truckButton6.addListener(new ChangeListener() {
+		});
+
+		//Truck 3 Selected
+		fireTruckSelector.difficultyButtonHard.addListener(new ClickListener() {
 			@Override
-			public void changed(ChangeEvent event, Actor actor) {
-				startGame();//Game begun with 5 (Range) as the truck selected
+			public void clicked(InputEvent event, float x, float y) {
+				startGame(0, 2);//Game begun with 2 (Damage) as the truck selected
 				HUD.setScore(100000);
 			}
 		});
@@ -353,18 +333,19 @@ public class MenuScreen implements Screen{
 				resumeGame(3);
 			}
 		});
-
 		// MENU_REFACTOR_5 - END OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+		// DIFFICULTY_7 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
+
 	}
 
 
 	/**
 	 * Calls function in Kroy to start a new game and ensures only 1 GameScreen is currenly running - Updated by NP STUDIOS
  	 */
-	public void startGame() {
+	public void startGame(int saveSlot, int difficultyChosen) {
 		 if (!currentlyRunningGame) {	// Checks if a new GameScreen is currently running and either makes one or ignores the commands
 			 currentlyRunningGame = true; // Makes sure that only one GameScreen is opened at once
-			 game.newGame(); // Calls the function in Kroy to start a new game
+			 game.newGame(saveSlot, difficultyChosen); // Calls the function in Kroy to start a new game
 		 }
 	}
 

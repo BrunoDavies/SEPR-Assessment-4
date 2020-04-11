@@ -114,4 +114,13 @@ public abstract class Entity extends GameObject{
 	// STATBAR_REFACTOR_1 - END OF MODIFICATION  - NP STUDIOS
 
 	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS] ----
+	// DIFFICULTY_5 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
+	//Setter for the maxHealthPoints but also changes the current health to that value (unlike other setters
+	public void setMaxHealthPointsForDifficulty(int maxHealthPoints) { //unconventional name to not confuse teammates.
+		this.maxHealthPoints = maxHealthPoints; //changes the maxHealthPoints to passed int
+		this.healthPoints=maxHealthPoints; //also set health points to this value since this setter is used after entities
+		                                  //are instantiated.
+	}
+	// DIFFICULTY_5 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
+
 }

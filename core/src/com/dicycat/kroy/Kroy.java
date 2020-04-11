@@ -64,8 +64,10 @@ public class Kroy extends Game {
 	 * Call to generate a new GameScreen instance which runs a new game. Saveslot is not needed
 	 * as this is created a new game and not loading it, therefore set to 0.
 	 */
-	public void newGame() {
-		mainGameScreen = new GameScreen(this, 0, 0);// Initialise new game
+	public void newGame(int saveSlot, int difficultyChosen) {
+		// DIFFICULTY_3 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
+		mainGameScreen = new GameScreen(this,0, difficultyChosen, saveSlot);// Initialise new game
+		// DIFFICULTY_3 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 		setScreen(mainGameScreen);// Display new game
 	}
 
@@ -76,8 +78,8 @@ public class Kroy extends Game {
 	 * @param saveSlot the slot to load the game from either 1, 2 or 3
 	 */
 	public void loadGame(int saveSlot) {
-		mainGameScreen = new GameScreen(this, 0, saveSlot);
-		setScreen(mainGameScreen);// Display new game
+		mainGameScreen = new GameScreen(this, 0, saveData.getInteger("SLOT_" + saveSlot + "_" + "DIFFICULTY"), saveSlot);
+		setScreen(mainGameScreen); // Display new game
 	}
 	// SAVING_1 - END OF MODIFICATION  - NP STUDIOS
 
