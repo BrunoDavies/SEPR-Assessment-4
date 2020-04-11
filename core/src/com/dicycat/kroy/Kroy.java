@@ -18,10 +18,14 @@ import com.dicycat.kroy.screens.MinigameScreen;
  */
 
 public class Kroy extends Game {
-	public static final int width = 1080;
-	public static final int height = 720;
+	// GAME_RESIZE - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+	// Increased the games width and height values
+	public static final int width = 1820;
+	public static final int height = 980;
+	// GAME_RESIZE - END OF MODIFICATION  - NP STUDIOS
 
 	public static boolean debug = false;
+	// GAME_RESIZE - END OF MODIFICATION  - NP STUDIOS
 	
 	public static GameScreen mainGameScreen;
 	public static MenuScreen mainMenuScreen;
@@ -57,15 +61,27 @@ public class Kroy extends Game {
 	public void dispose () {}
 	
 	/**
-	 * Call to generate a brand new GameScreen which runs a new game
-	 * @param truckNum  Selected truck
+	 * Call to generate a new GameScreen instance which runs a new game. Saveslot is not needed
+	 * as this is created a new game and not loading it, therefore set to 0.
 	 */
-	public void newGame(int truckNum, int difficultyChosen) {
+	public void newGame(int saveSlot, int difficultyChosen) {
 		// DIFFICULTY_3 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
-		mainGameScreen = new GameScreen(this,truckNum, difficultyChosen);// Initialise new game
+		mainGameScreen = new GameScreen(this,0, difficultyChosen, saveSlot);// Initialise new game
 		// DIFFICULTY_3 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 		setScreen(mainGameScreen);// Display new game
 	}
+
+	// SAVING_1 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+	// Added load game function
+	/**
+	 * Creates a new game instance and passes the saveslot number the game will need to load values from.  - NP STUDIOS
+	 * @param saveSlot the slot to load the game from either 1, 2 or 3
+	 */
+	public void loadGame(int saveSlot) {
+		mainGameScreen = new GameScreen(this, 0, saveData.getInteger("SLOT_" + saveSlot + "_" + "DIFFICULTY"), saveSlot);
+		setScreen(mainGameScreen); // Display new game
+	}
+	// SAVING_1 - END OF MODIFICATION  - NP STUDIOS
 
 	//MINIGAME_INTEGRATION_1 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 	public void newMinigame(boolean flag) {

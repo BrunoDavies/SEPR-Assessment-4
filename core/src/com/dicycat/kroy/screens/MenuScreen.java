@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.dicycat.kroy.Kroy;
 import com.dicycat.kroy.scenes.FireTruckSelectionScene;
 import com.dicycat.kroy.scenes.HUD;
+import com.dicycat.kroy.scenes.LoadWindow;
 import com.dicycat.kroy.scenes.OptionsWindow;
 //ADD_CONTROL_SCREEN_2 - START OF MODIFICATION - NP Studios - Jordan Spooner ---------------
 import com.dicycat.kroy.scenes.ControlsWindow;
@@ -37,22 +38,24 @@ public class MenuScreen implements Screen{
   	playButtonActive, 
   	optionsButton, 
   	optionsButtonActive, 
-  	exitButton, 
-  	exitButtonActive, 
-  	minigameButton, 
-  	minigameButtonActive, 
- // ADD_CONTROL_SCREEN_3 - START OF MODIFICATION - NP Studios - Jordan Spooner ---------------
+  	exitButton,
+  	exitButtonActive,
+  	loadGameButton,
+  	loadGameButtonActive,
+ 	// ADD_CONTROL_SCREEN_3 - START OF MODIFICATION - NP Studios - Jordan Spooner ---------------
   	controlsButton,
   	controlsButtonActive,
- // ADD_CONTROL_SCREEN_3 - END OF MODIFICATION - NP Studios - Jordan Spooner -----------------
+ 	// ADD_CONTROL_SCREEN_3 - END OF MODIFICATION - NP Studios - Jordan Spooner -----------------
   	background;
   
   private Stage stage;
   
   private OptionsWindow optionsWindow;
-//ADD_CONTROL_SCREEN_4 - START OF MODIFICATION - NP Studios - Jordan Spooner ---------------
+  private LoadWindow loadWindow;
+  private FireTruckSelectionScene fireTruckSelector;
+	//ADD_CONTROL_SCREEN_4 - START OF MODIFICATION - NP Studios - Jordan Spooner ---------------
   private ControlsWindow controlsWindow;
-//ADD_CONTROL_SCREEN_4 - END OF MODIFICATION - NP Studios - Jordan Spooner -----------------
+	//ADD_CONTROL_SCREEN_4 - END OF MODIFICATION - NP Studios - Jordan Spooner -----------------
   
   public static Music music = Gdx.audio.newMusic(Gdx.files.internal("gamemusic.mp3"));
   public static float musicVolume = 0.4f;
@@ -62,18 +65,17 @@ public class MenuScreen implements Screen{
   private int buttonHeight = 50;
   private int xAxisCentred = (Kroy.width/2) - (buttonWidth/2);
   private int playButtonY = (Kroy.height/2)+75;
-  private int optionsButtonY = (Kroy.height/2);
-  private int minigameButtonY = (Kroy.height/2)-75;
+  private int optionsButtonY = (Kroy.height/2)-75;
+  private int loadgameButtonY = (Kroy.height/2);
+  private int exitButtonY = (Kroy.height/2)-225;
 //ADD_CONTROL_SCREEN_5 - START OF MODIFICATION - NP Studios - Jordan Spooner ---------------
   private int controlsButtonY = (Kroy.height/2)-150;
 //ADD_CONTROL_SCREEN_5 - END OF MODIFICATION - NP Studios - Jordan Spooner -----------------
-  private int exitButtonY = (Kroy.height/2)-225;
   
   private Pixmap pm = new Pixmap(Gdx.files.internal("handHD2.png")); //cursor
   private int xHotSpot = pm.getWidth() / 3;	//where the cursor's aim is 
   private int yHotSpot = 0;
-  
-  private FireTruckSelectionScene fireTruckSelector;
+
   private boolean currentlyRunningGame = false;
 
   /**
@@ -86,30 +88,31 @@ public class MenuScreen implements Screen{
 	  MAINMENU,
 	  TRUCKSELECT,
 	  OPTIONS,
+	  LOAD,
 	// ADD_CONTROL_SCREEN_6 - START OF MODIFICATION - NP Studios - Jordan Spooner ---------------
 	  CONTROLS
 	// ADD_CONTROL_SCREEN_6 - END OF MODIFICATION - NP Studios - Jordan Spooner -----------------
   }
   
   public MenuScreenState state = MenuScreenState.MAINMENU;
-  
-  /**
-   * @param game
-   */
+
   public MenuScreen(Kroy game) { 
 	  this.game = game; 
-	  exitButton = new Texture("EXIT.png"); 	//in later stages we could also have buttonActive and buttonInactive
-	  exitButtonActive = new Texture("exitActive.png");
+	  exitButton = new Texture("quit.png"); 	//in later stages we could also have buttonActive and buttonInactive
+	  exitButtonActive = new Texture("quitActive.png");
 	  optionsButton = new Texture("options.png");
 	  optionsButtonActive = new Texture("optionsActive.png");
 	  playButton = new Texture("newgame.png");
-	  playButtonActive = new Texture("newActive.png");
-	  minigameButton = new Texture("minigame.png");
-	  minigameButtonActive = new Texture("minigameActive.png");
-	  background = new Texture ("fireforce.png");
+	  playButtonActive = new Texture("newgameActive.png");
+	  // MENU_REFACTOR_1 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+	  // Added buttons to go to the LoadWindow and removed minigame button
+	  loadGameButton = new Texture("loadgame.png");
+	  loadGameButtonActive = new Texture("loadgameActive.png");
+	  // MENU_REFACTOR_1 - END OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+	  background = new Texture ("fireforce.jpg");
 	// ADD_CONTROL_SCREEN_7 - START OF MODIFICATION - NP Studios - Jordan Spooner ---------------
 	  controlsButton = new Texture("controls.png");
-	  controlsButtonActive = new Texture("controls_ACTIVE.png");
+	  controlsButtonActive = new Texture("ControlsActive.png");
 	// ADD_CONTROL_SCREEN_7 - END OF MODIFICATION - NP Studios - Jordan Spooner -----------------
 	  
 	  gamecam = new OrthographicCamera();
@@ -124,6 +127,11 @@ public class MenuScreen implements Screen{
 	  music.setVolume(musicVolume);  
 	  
 	  optionsWindow = new OptionsWindow(game);
+	  // MENU_REFACTOR_2 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+	  // initializes a LoadWindow instance.
+	  loadWindow = new LoadWindow(game);
+	  // MENU_REFACTOR_2 - END OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+
 	  optionsWindow.visibility(false);
 	  
 	// ADD_CONTROL_SCREEN_8 - START OF MODIFICATION - NP Studios - Jordan Spooner ---------------
@@ -153,7 +161,7 @@ public class MenuScreen implements Screen{
 			  Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, xHotSpot, yHotSpot));
 			  game.batch.draw(background, 0, 0);
 			 
-			  game.batch.draw(minigameButton, xAxisCentred, minigameButtonY, buttonWidth, buttonHeight);
+			  game.batch.draw(loadGameButton, xAxisCentred, loadgameButtonY, buttonWidth, buttonHeight);
 			
 			
 			  //for play button: checks if the position of the cursor is inside the coordinates of the button
@@ -181,13 +189,16 @@ public class MenuScreen implements Screen{
 			  }
 				
 			  //for minigame button
-			  if(( (Gdx.input.getX() < (xAxisCentred + buttonWidth)) && (Gdx.input.getX() > xAxisCentred) ) && ( (Kroy.height - Gdx.input.getY() > minigameButtonY ) && (Kroy.height - Gdx.input.getY() < (minigameButtonY + buttonHeight)) ) ){
-				  game.batch.draw(minigameButtonActive, xAxisCentred, minigameButtonY, buttonWidth, buttonHeight);
+			  if(( (Gdx.input.getX() < (xAxisCentred + buttonWidth)) && (Gdx.input.getX() > xAxisCentred) ) && ( (Kroy.height - Gdx.input.getY() > loadgameButtonY) && (Kroy.height - Gdx.input.getY() < (loadgameButtonY + buttonHeight)) ) ){
+				  game.batch.draw(loadGameButtonActive, xAxisCentred, loadgameButtonY, buttonWidth, buttonHeight);
 				  if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-					  startMinigame();
+					  // MENU_REFACTOR_3 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+					  // Sets menuscreens state to the load window, removed old minigame initialization code.
+					  setGameState(MenuScreenState.LOAD);
+					  // MENU_REFACTOR_3 - END OF MODIFICATION  - NP STUDIOS - LUCY IVATT
 						  }
 					  } else {
-						  game.batch.draw(minigameButton, xAxisCentred, minigameButtonY, buttonWidth, buttonHeight);
+						  game.batch.draw(loadGameButton, xAxisCentred, loadgameButtonY, buttonWidth, buttonHeight);
 					  }
 	
 						  //for options button
@@ -230,6 +241,15 @@ public class MenuScreen implements Screen{
 			  optionsWindow.stage.draw();
 			  optionsWindow.clickCheck(true);
 			  break;
+		  // MENU_REFACTOR_4 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+		  // Created a load case which sets the correct input processor and draws and renders the correct screen.
+		  case LOAD:
+		  	Gdx.input.setInputProcessor(loadWindow.stage);
+		  	loadWindow.stage.act();
+		  	loadWindow.stage.draw();
+		  	clickCheck();
+		  	break;
+		  // MENU_REFACTOR_4 - END OF MODIFICATION  - NP STUDIOS - LUCY IVATT
 	// ADD_CONTROL_SCREEN_10 - START OF MODIFICATION - NP Studios - Jordan Spooner ---------------
 		  case CONTROLS:
 			  Gdx.input.setInputProcessor(controlsWindow.stage);
@@ -258,43 +278,88 @@ public class MenuScreen implements Screen{
 		//Truck 1 Selected
 		fireTruckSelector.difficultyButtonEasy.addListener(new ClickListener() {
 			@Override
-	    	public void clicked(InputEvent event, float x, float y) {
+			public void clicked(InputEvent event, float x, float y) {
 				startGame(0, 0);//Game begun with easy difficulty
 				HUD.setScore(100000);
-	    	}
-	    });
+			}
+		});
 		//Truck 2 Selected
 		fireTruckSelector.difficultyButtonMedium.addListener(new ClickListener() {
-	    	@Override
-	    	public void clicked(InputEvent event, float x, float y) {
-	    		startGame(0, 1);//Game begun with medium difficulty
-	    		HUD.setScore(100000);
-	    	}
-	    });
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+
+				startGame(0, 1);//Game begun with medium difficulty
+				HUD.setScore(100000);
+			}
+		});
+
 		//Truck 3 Selected
 		fireTruckSelector.difficultyButtonHard.addListener(new ClickListener() {
-	    	@Override
-	    	public void clicked(InputEvent event, float x, float y) {
-	    		startGame(0, 2);//Game begun with medium difficulty
-	    		HUD.setScore(100000);
-	    	}
-	    });
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				startGame(0, 2);//Game begun with 2 (Damage) as the truck selected
+				HUD.setScore(100000);
+			}
+		});
+
+		// MENU_REFACTOR_5 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+		// Added input handling code for the load buttons and the back button on the load window.
+		LoadWindow.back.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				Kroy.mainMenuScreen.state = MenuScreen.MenuScreenState.MAINMENU;
+			}
+		});
+
+		//music page
+		//playStopMusic button
+		LoadWindow.load1.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				resumeGame(1);
+			}
+		});
+		//playStopMusic button
+		LoadWindow.load2.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				resumeGame(2);
+			}
+		});
+		//volumeDown button
+		LoadWindow.load3.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				resumeGame(3);
+			}
+		});
+		// MENU_REFACTOR_5 - END OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+		// DIFFICULTY_7 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 
 	}
-	// DIFFICULTY_7 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 
 
 	/**
-	 * 
-	 * @param truckNum Type of truck selected
+	 * Calls function in Kroy to start a new game and ensures only 1 GameScreen is currenly running - Updated by NP STUDIOS
  	 */
-	public void startGame(int truckNum, int difficultyChosen) {
+	public void startGame(int saveSlot, int difficultyChosen) {
 		 if (!currentlyRunningGame) {	// Checks if a new GameScreen is currently running and either makes one or ignores the commands
 			 currentlyRunningGame = true; // Makes sure that only one GameScreen is opened at once
-			 game.newGame(truckNum, difficultyChosen); // Calls the function in Kroy to start a new game
+			 game.newGame(saveSlot, difficultyChosen); // Calls the function in Kroy to start a new game
 		 }
-	} 
-	
+	}
+
+	/**
+	 * Calls function in Kroy to start a game associated with a saveslot and makes sure only 1 is running at once - NP STUDIOS
+	 * @param saveSlot
+	 */
+	public void resumeGame(int saveSlot) {
+		if (!currentlyRunningGame) {	// Checks if a new GameScreen is currently running and either makes one or ignores the commands
+			currentlyRunningGame = true; // Makes sure that only one GameScreen is opened at once
+			game.loadGame(saveSlot); // Calls the function in Kroy to start a new game
+		}
+	}
+
 	/**
 	 * Run the minigame
  	 */

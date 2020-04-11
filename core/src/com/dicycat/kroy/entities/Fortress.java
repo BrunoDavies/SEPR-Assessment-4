@@ -6,7 +6,6 @@ import com.dicycat.kroy.Kroy;
 import com.dicycat.kroy.bullets.Bullet;
 import com.dicycat.kroy.bullets.BulletDispenser;
 import com.dicycat.kroy.bullets.Pattern;
-import com.dicycat.kroy.misc.StatBar;
 
 /**
  * Static hostile Entity.
@@ -28,13 +27,14 @@ public class Fortress extends Entity {
 	 * @param fortressTexture
 	 * @param deadTexture
 	 * @param size
+	 * @param fortressStats
 	 */
 
 	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ---
 		public Fortress(Vector2 spawnPos, Texture fortressTexture, Texture deadTexture, Vector2 size, Texture bulletTexture,
-						Float[] fortressStats) { //Added fortressStats as a parameter so it passes the health and damage
+						float[] fortressStats) { //Added fortressStats as a parameter so it passes the health and damage
 												// values for the fortress being made
-		super(spawnPos, fortressTexture, size, fortressStats[0]); //Changed the value for health in the super call to be the first value in fortressStat
+		super(spawnPos, fortressTexture, size, fortressStats[0], 500); //Changed the value for health in the super call to be the first value in fortressStat
 		this.fortressDamage = fortressStats[1]; //Set value for new attribute to be the second value in fortressStats
 
 		dispenser = new BulletDispenser(this);

@@ -21,7 +21,7 @@ public class Box extends Entity {
     private Circle hitbox;
 
     public Box(Vector2 spawnPos){
-        super(spawnPos, Kroy.mainGameScreen.textures.getPowerupBox(), new Vector2(50,50),10);
+        super(spawnPos, Kroy.mainGameScreen.textures.getPowerupBox(), new Vector2(50,50),10, 10);
         hitbox = new Circle(spawnPos.x, spawnPos.y, 15);
     }
     @Override

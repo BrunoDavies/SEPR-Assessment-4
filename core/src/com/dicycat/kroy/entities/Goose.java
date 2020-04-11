@@ -34,8 +34,7 @@ public class Goose extends Entity {
 	 * Instantiate the default goose
 	 */
 	public Goose() {
-		// was * scale
-		super(new Vector2(-200, 0 ), new Texture("goose2.png"), new Vector2(scale, scale), 1);
+		super(new Vector2(-200, 0 ), new Texture("goose2.png"), new Vector2(scale, scale), 1 ,500);
 		SetAnimation(73,97);
 	}
 

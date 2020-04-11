@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -20,7 +21,6 @@ import com.dicycat.kroy.GameTextures;
 import com.dicycat.kroy.Kroy;
 import com.dicycat.kroy.debug.DebugCircle;
 import com.dicycat.kroy.debug.DebugDraw;
-import com.dicycat.kroy.debug.DebugLine;
 import com.dicycat.kroy.debug.DebugRect;
 import com.dicycat.kroy.entities.FireStation;
 import com.dicycat.kroy.entities.FireTruck;
@@ -42,7 +42,7 @@ import com.dicycat.kroy.scenes.PauseWindow;
  * @author lnt20
  *
  */
-public class GameScreen implements Screen{  
+public class GameScreen implements Screen{
 
 	public static enum GameScreenState{
 		PAUSE,
@@ -77,7 +77,11 @@ public class GameScreen implements Screen{
 	public GameTextures textures;
 	public static float gameTimer; //Timer to destroy station
 
-	
+	// SAVING_4 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+	// Defines the saveslot variable and initializes the preferences file which is used to hold the save data.
+	private int saveSlot;
+	private Preferences saveData = Gdx.app.getPreferences("Kroy");
+	// SAVING_4 - END OF MODIFICATION  - NP STUDIOS - LUCY IVATT
 
 	public GameScreenState state = GameScreenState.RUN;
 	
@@ -105,7 +109,7 @@ public class GameScreen implements Screen{
 		};
 
 	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ----
-	private Float[][] fortressStats = { //Each list contains unique values for health and damage. One list for each fortress
+	private float[][] fortressStats = { //Each list contains unique values for health and damage. One list for each fortress
 
             {300f, 5f},
             {400f, 10f},
@@ -163,13 +167,15 @@ public class GameScreen implements Screen{
 	 * extended
 	 * @param _game
 	 * @param truckNum
+	 * @param saveSlot 0 if no save slot, otherwise between 1 and 3
 	 */
-	public GameScreen(Kroy _game, int truckNum, int difficultyChosen) {
+
+	public GameScreen(Kroy _game, int truckNum, int difficultyChosen, int saveSlot) {
 		this.difficultyChosen = difficultyChosen;
 		game = _game;
+		this.saveSlot = saveSlot;
 		gamecam = new OrthographicCamera();
 		gameport = new FitViewport(Kroy.width, Kroy.height, gamecam);	//Mic:could also use StretchViewPort to make the screen stretch instead of adapt
-		hud = new HUD(game.batch, this.game);
 		gameMap = new TiledGameMap(); //or FitPort to make it fit into a specific width/height ratio
 		// MINIMAP_ADDITION_2 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE ----
 		minimap = new Texture("MinimapBackground.png"); //adds a texture of the map as a .png to be the minimap
@@ -179,8 +185,9 @@ public class GameScreen implements Screen{
 		optionsWindow = new OptionsWindow(game);
 		optionsWindow.visibility(false);
 		textures = new GameTextures();
-		spawnPosition = new Vector2(3750, 4000);
-		gameTimer = 60 * 5; //new    //Set timer to 5 minutes  
+		spawnPosition = new Vector2(234 * 16, 3900);
+		gameTimer = 60 * 5; //new    //Set timer to 5 minutes
+		hud = new HUD(game.batch, gameTimer);
 		this.truckNum = truckNum;
 
         timeIncreaseIcon = new StatusIcon(Vector2.Zero,"TimeIncrease.png");
@@ -209,9 +216,6 @@ public class GameScreen implements Screen{
 		fortressSizes.add(new Vector2(400, 256));
 		fortressSizes.add(new Vector2(450, 256));
 		fortressesCount = 6;
-		
-
-
 		// DIFFICULTY_2 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 		//changes the spawn rate of UFO's, lower for easier, higher for harder.
 		patrolUpdateRate = (int)((float)30* (difficultyStats[difficultyChosen][partolNumberIndex]));
@@ -220,7 +224,6 @@ public class GameScreen implements Screen{
 		// DIFFICULTY_2 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 
 		//POWERUPS_5 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
-		patrolUpdateRate = 30;
 		boxSpawnRate = 20;
 		//POWERUPS_5 - END OF MODIFICATION - NPSTUDIOS
 
@@ -239,10 +242,6 @@ public class GameScreen implements Screen{
 		}
 	}
 	// DIFFICULTY_4 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
-
-
-
-
 
 	//POWERUPS_6 - START OF MODIFICATION - NPSTUDIOS - Alasdair Pilmore-Bedford
 
@@ -291,29 +290,37 @@ public class GameScreen implements Screen{
 			deadObjects = new ArrayList<GameObject>();
 			debugObjects = new ArrayList<DebugDraw>();
 
-
 			// Initialises the FireTrucks
 			for (int i = 0; i < 6; i++) {
 				firetruckInit(spawnPosition.x - 135 + (i * 50), spawnPosition.y, i);
 				fortressInit(i);
+				// SAVING_5 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+				// moved firetruck statbar code to be initialized after the firetrucks are created.
+				tankbars.get(i).setPosition(firetrucks.get(i).getCentre().add(0,20));
+				tankbars.get(i).setBarDisplay((firetrucks.get(i).getCurrentWater()/ firetrucks.get(i).getMaxWater())*50);
+
+				healthbars.get(i).setPosition(firetrucks.get(i).getCentre().add(0,25));
+				healthbars.get(i).setBarDisplay((firetrucks.get(i).getHealthPoints()*50)/firetrucks.get(i).getMaxHealthPoints());
 			}
+
 			gameObjects.add(new FireStation(textures.getFireStation(), textures.getFireStationDead()));
 			switchTrucks(truckNum);
 
-		// DIFFICULTY_6 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
-		//loops through all the firetrucks
-		for (FireTruck truck : firetrucks) {
-			//sets the new max health to the standard max health times by a multiplier for the difficulty selected.
-			truck.setMaxHealthPointsForDifficulty((int)(truck.getMaxHealthPoints()*
-											(double)difficultyStats[difficultyChosen][healthMultiplierIndex]));
+			// DIFFICULTY_6 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
+			//loops through all the firetrucks
+			for (FireTruck truck : firetrucks) {
+				//sets the new max health to the standard max health times by a multiplier for the difficulty selected.
+				truck.setMaxHealthPointsForDifficulty((int)(truck.getMaxHealthPoints()*
+						(double)difficultyStats[difficultyChosen][healthMultiplierIndex]));
+			}
+			// DIFFICULTY_6 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
+			loadGame(); // calls the load game function which updates all health values, positions and stats as required.
+			// SAVING_5 - END OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+			}
+			gamecam.translate(new Vector2(currentTruck.getX(), currentTruck.getY())); // sets initial Camera position
+			start = false;
+			//MINIGAME_INTEGRATION - END OF MODIFICATION - NPSTUDIOS
 		}
-		// DIFFICULTY_6 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
-		}
-		
-		gamecam.translate(new Vector2(currentTruck.getX(), currentTruck.getY())); // sets initial Camera position
-		start = false;
-		//MINIGAME_INTEGRATION - END OF MODIFICATION - NPSTUDIOS
-	}
 
 	/**
 	 * new
@@ -326,9 +333,9 @@ public class GameScreen implements Screen{
 		// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ----
 		Fortress tempFortress = new Fortress(fortressPositions.get(num), textures.getFortress(num), textures.getDeadFortress(num),
 				fortressSizes.get(num), textures.getBullet(), fortressStats[num]); //Added the list of stats corresponding
-		  																	       // to the fortress being made as a parameter
-																					//to pass to instantiate a fortress
-        // [UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS] ----
+		// to the fortress being made as a parameter to pass to instantiate a fortress
+		// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS] ----
+
 		gameObjects.add(tempFortress);
 		fortresses.add(tempFortress);
 		fortressHealthBars.add(new StatBar(new Vector2(fortressPositions.get(num).x, fortressPositions.get(num).y + 100), "Red.png", 10));
@@ -498,6 +505,7 @@ public class GameScreen implements Screen{
 		}
 		//POWERUPS_2 - END OF MODIFICATION - NPSTUDIOS
 	}
+
 	//MINIMAP_ADDITION_4 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 	public void drawMinimap(){
 		game.batch.begin();
@@ -622,19 +630,6 @@ public class GameScreen implements Screen{
 	}
 
 	/**
-	 * Draw a debug line
-	 * @param start Start of the line
-	 * @param end End of the line
-	 * @param lineWidth Width of the line
-	 * @param colour Colour of the line
-	 */
-	public void DrawLine(Vector2 start, Vector2 end, int lineWidth, Color colour) {
-		if (Kroy.debug) {
-			debugObjects.add(new DebugLine(start, end, lineWidth, colour));
-		}
-	}
-
-	/**
 	 * Draw a debug circle (outline)
 	 * @param position Centre of the circle
 	 * @param radius Radius of the circle
@@ -713,23 +708,13 @@ public class GameScreen implements Screen{
 	public void dispose() {
 		Kroy.mainGameScreen = null;
 	}
-	/**
-	 * @param s
-	 */
+
 	public void setGameState(GameScreenState s){
 	    state = s;
 	}
 
-	/**
-	 * @param index
-	 * @return
-	 */
-	public GameObject getGameObject(int index) {
-		if (index <= (gameObjects.size()-1)) {
-			return gameObjects.get(index);
-		}else {
-			return null;
-		}
+	public GameScreenState getGameScreenState() {
+		return state;
 	}
 
 	/**
@@ -766,6 +751,34 @@ public class GameScreen implements Screen{
 	    		Gdx.app.exit();
 	    	}
 	    });
+
+		// SAVING_6 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+		// Added input handling for the save buttons in the pause menu.
+		//save1 button
+		pauseWindow.save1.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				saveGame(1);
+			}
+		});
+
+		//save2 button
+		pauseWindow.save2.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				saveGame(2);
+			}
+		});
+
+		//save3 button
+		pauseWindow.save3.addListener(new ClickListener() {
+			@Override
+			public void clicked(InputEvent event, float x, float y) {
+				saveGame(3);
+			}
+		});
+		// SAVING_6 - END OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+
 		//menu button
 		pauseWindow.menu.addListener(new ClickListener() {
 	    	@Override
@@ -893,20 +906,74 @@ public class GameScreen implements Screen{
 		return hud;
 	}
 
-	// FORTRESS_COUNT_FIX_2 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
-	// Deleted unused setters for fortressCount
-	// FORTRESS_COUNT_FIX_2 - END OF MODIFICATION  - NP STUDIOS
-
-	/** 
-	 * @return spawnPosition
-	 */
 	public Vector2 getSpawnPosition() {
 		return spawnPosition;
 	}
+
+	/**
+	 * Saves all of the game data needed to the preferences file 'Kroy' and flushes to ensure this persists. - NP STUDIOS
+	 * @param saveSlot 1, 2 or 3
+	 */
+	public void saveGame(int saveSlot) {
+		String prefix = "SLOT_" + saveSlot + "_";
+		for(int i = 0; i < 6; i++){
+			saveData.putFloat((prefix + "FORTRESS_HEALTH_" + i), fortresses.get(i).getHealthPoints());
+			saveData.putFloat((prefix + "TRUCK_HEALTH_" + i), firetrucks.get(i).getHealthPoints());
+			saveData.putFloat((prefix + "TRUCK_WATER_" + i), firetrucks.get(i).getCurrentWater());
+			saveData.putFloat((prefix + "TRUCK_X_POS_" + i), firetrucks.get(i).getPosition().x);
+			saveData.putFloat((prefix + "TRUCK_Y_POS_" + i), firetrucks.get(i).getPosition().y);
+			saveData.putBoolean((prefix + "UNLIMITED_WATER_" + i), firetrucks.get(i).isUnlimitedWater());
+			saveData.putBoolean((prefix + "DEFENCE_UP_" + i), firetrucks.get(i).getDefenceUp());
+			System.out.println(firetrucks.get(i).isUnlimitedWater());
+		}
+		saveData.putBoolean((prefix + "FREEZE_ENEMIES"), freezeEnemies);
+		saveData.putBoolean((prefix + "RAIN_DANCE"), rainDance);
+		saveData.putFloat((prefix + "GAME_TIME"), gameTimer);
+		saveData.putInteger((prefix + "DIFFICUTLY"), difficultyChosen);
+		saveData.flush();
+	}
+
+	/**
+	 * Accesses the prefences file 'Kroy' and gets the values saved in the saveSlot (either 1, 2 or 3) and applies them
+	 * as needed. - NP STUDIOS
+	 */
+	public void loadGame() {
+		if(saveSlot != 0) {
+			String prefix = "SLOT_" + saveSlot + "_";
+			for(int i = 0; i < 6; i++){
+				fortresses.get(i).setHealthPoints(saveData.getFloat(prefix + "FORTRESS_HEALTH_" + i, fortressStats[i][0]));
+				if(fortresses.get(i).getHealthPoints() <= 0) fortresses.get(i).die();
+				firetrucks.get(i).setHealthPoints(saveData.getFloat(prefix + "TRUCK_HEALTH_" + i, 100));
+				firetrucks.get(i).setCurrentWater(saveData.getFloat(prefix + "TRUCK_WATER_" + i, truckStats[i][2]));
+				firetrucks.get(i).setPosition(new Vector2(saveData.getFloat(prefix + "TRUCK_X_POS_" + i,
+						spawnPosition.x - 135 + (i * 50)),
+						saveData.getFloat(prefix + "TRUCK_Y_POS_" + i,spawnPosition.y)));
+				firetrucks.get(i).setUnlimitedWater(saveData.getBoolean((prefix + "UNLIMITED_WATER_" + i)));
+				firetrucks.get(i).setDefenceUp(saveData.getBoolean(prefix + "DEFENCE_UP_" + i));
+				firetrucks.get(i).update();
+			}
+			gameTimer = saveData.getFloat(prefix + "GAME_TIME", 300);
+			hud.setTimer(saveData.getFloat(prefix + "GAME_TIME", 300));
+			if (saveData.getBoolean((prefix + "FREEZE_ENEMIES"))) {
+				freezePatrols(true);
+			}
+			if (saveData.getBoolean(prefix + "RAIN_DANCE")) {
+				rainDance();
+			}
+		}
+	}
+
+	// FORTRESS_COUNT_FIX_2 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+	// Deleted unused setters for fortressCount
+	// FORTRESS_COUNT_FIX_2 - END OF MODIFICATION  - NP STUDIOS
 
     // [FORTRESS_IMPROVEMENT] - START OF MODIFICATION  - [NP_STUDIOS] - [CASSIE_LILLYSTONE] ----
 	public ArrayList<Fortress> getFortresses(){
 	    return fortresses;
     } //Added a getter which returns a list of fortresses, required for making fortress health improve over time
     // [FORTRESS_IMPROVEMENT] - END OF MODIFICATION  - [NP_STUDIOS]----
+
+	public int getFortressesCount() {
+		return fortressesCount;
+	}
 }

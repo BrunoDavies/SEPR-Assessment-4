@@ -39,7 +39,7 @@ public class GameOverScreen implements Screen {
 	private Texture youWonImage = new Texture("youwon.png");
 	private Texture youLostImage = new Texture("youlost.png");
 	private Texture playButton = new Texture("newgame.png");
-	private Texture playButtonActive = new Texture("newActive.png");
+	private Texture playButtonActive = new Texture("newgameActive.png");
 	private Texture menuButton = new Texture("menu.png");
 	private Texture menuButtonActive = new Texture("menuActive.png");
 
@@ -167,7 +167,7 @@ public class GameOverScreen implements Screen {
 			if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 				this.dispose();
 				game.batch.end();
-				game.newGame(truckNum, difficultyChosen);
+				game.newGame(0, difficultyChosen);
 				return;
 			}
 		} else {

@@ -4,14 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.dicycat.kroy.GameObject;
 import com.dicycat.kroy.Kroy;
-import com.dicycat.kroy.misc.StatBar;
 import com.dicycat.kroy.misc.StatusIcon;
 import com.dicycat.kroy.misc.WaterStream;
 import com.dicycat.kroy.screens.GameScreen;
@@ -46,7 +44,7 @@ public class FireTruck extends Entity{
 	private float defenceUpTimer;
 
 
-	private boolean[] statusEffects = new boolean[4];
+	private boolean[] statusEffects = new boolean[2];
 	private float range;
 
 	private Vector2 statusIconPos = Vector2.Zero;
@@ -61,7 +59,7 @@ public class FireTruck extends Entity{
 	 */
 
 	public FireTruck(Vector2 spawnPos, Float[] truckStats, Texture texture) {
-		super(spawnPos, texture, new Vector2(25,50), 100);
+		super(spawnPos, texture, new Vector2(25,50), 100, 500);
 		assignStatusEffectArray();
 		DIRECTIONS.put("n",0);			//North Facing Direction (up arrow)
 		DIRECTIONS.put("w",90);			//West Facing Direction (left arrow)
@@ -95,11 +93,11 @@ public class FireTruck extends Entity{
 
 	}
 
-		// STATBAR_REFACTOR_2 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
-		// Removed the creation of statbars from the firetruck class as adding the objects to the array
-		// in GameScreen would cause problems with testing so we moved this functionality to the
-		// GameScreen class itself.
-		// STATBAR_REFACTOR_2 - END OF MODIFICATION  - NP STUDIOS
+	// STATBAR_REFACTOR_2 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+	// Removed the creation of statbars from the firetruck class as adding the objects to the array
+	// in GameScreen would cause problems with testing so we moved this functionality to the
+	// GameScreen class itself.
+	// STATBAR_REFACTOR_2 - END OF MODIFICATION  - NP STUDIOS
 
 	// TESTING_REFACTOR_1 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
 	// Removed constructor created by previous group that was just for testing purposes
@@ -142,7 +140,7 @@ public class FireTruck extends Entity{
 
 			for (int i = 0; i <= 3; i++) {// loops through the 4 arrow keys (Stored as KEYS above)
 				if (Gdx.input.isKeyPressed(ARROWKEYS[i])) {
-					directionKey+=directionKeys[i];
+					directionKey += directionKeys[i];
 				}
 			}
 
@@ -177,14 +175,11 @@ public class FireTruck extends Entity{
 		
 		//Move the hit box to it's new centred position according to the sprite's position.
         hitbox.setCenter(getCentre().x, getCentre().y);
-        
-        //Draw debugs
-    	Kroy.mainGameScreen.DrawRect(new Vector2(hitbox.x, hitbox.y), new Vector2(hitbox.width, hitbox.height), 2, Color.GREEN);
-    	Kroy.mainGameScreen.DrawCircle(getCentre(), range, 1, Color.BLUE);
 
 		updateStatusIcons();
 		assignStatusEffectArray();
 		moveIconByFixedPoint();
+
 		// STATBAR_REFACTOR_3 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
 		// Removed the statbars  update code from the firetruck class.
 		// STATBAR_REFACTOR_3- END OF MODIFICATION  - NP STUDIOS
@@ -347,8 +342,9 @@ public class FireTruck extends Entity{
         // [FORTRESS_IMPROVEMENT] - START OF MODIFICATION  - [NP_STUDIOS] - [CASSIE_LILLYSTONE] ----
         fortressList = Kroy.mainGameScreen.getFortresses(); //Create a new list which contains the fortresses
 
-        for (Fortress fortress : fortressList){
-            fortress.setHealthPoints(10); //Add 10 to the health of each fortress each time a truck is killed - so that fortresses improve their health over time
+
+        for (Object fortress : fortressList){
+            addHealth(10); //Add 10 to the health of each fortress each time a truck is killed - so that fortresses improve their health over time
 		// [FORTRESS_IMPROVEMENT] - END OF MODIFICATION  - [NP_STUDIOS] ----
         }
 
@@ -384,7 +380,7 @@ public class FireTruck extends Entity{
 			currentWater += 2;
 		}
 		if(!(getHealthPoints() >= maxHealthPoints)){
-			setHealthPoints(2) ;
+			addHealth(2) ;
 		}
 	}
 
@@ -401,7 +397,7 @@ public class FireTruck extends Entity{
 		}
 		return false;
 	}
-	
+
 	/**
 	 * new
 	 * @return currentWater
@@ -409,14 +405,24 @@ public class FireTruck extends Entity{
 	public float getCurrentWater() {
 		return currentWater;
 	}
-	
+	// FIRETRUCK_SETTERS - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+	// Changed the name from setCurrentWater to addWater as this was slightly ambigious, it doesnt set the value
+	// but increases it by the amount input. Then created a true setter for currentWater which is used when loading
+	// saved games.
 	/**
 	 * new
 	 * Increase the currentWater by the input parameter
 	 */
-	public void setCurrentWater(float x) {
+
+	public void addWater(float x) {
 		 currentWater += x;
 	}
+
+	public void setCurrentWater(float currentWater) {
+		this.currentWater = currentWater;
+	}
+	// FIRETRUCK_SETTERS - END OF MODIFICATION  - NP STUDIOS
+
 	//POWERUPS_13 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 	/**
 	 *
@@ -428,6 +434,10 @@ public class FireTruck extends Entity{
 		this.unlimitedWaterTimer = 0;
 		updateStatusIcons();
 		assignStatusEffectArray();
+	}
+
+	public boolean isUnlimitedWater() {
+		return unlimitedWater;
 	}
 
 	/**
@@ -443,9 +453,7 @@ public class FireTruck extends Entity{
 	}
 
 	public Boolean getDefenceUp(){
-		return this.defenceUp;
+		return defenceUp;
 	}
 	//POWERUPS_13 - END OF MODIFICATION - NPSTUDIOS
-
-
 }

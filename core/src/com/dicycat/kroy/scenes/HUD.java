@@ -16,6 +16,8 @@ import com.dicycat.kroy.misc.StatusIcon;
 
 import java.beans.VetoableChangeListener;
 
+import static java.lang.Math.abs;
+
 /**
  * HUD window
  * 
@@ -25,47 +27,53 @@ import java.beans.VetoableChangeListener;
 public class HUD {
 	public Stage stage;
 	private Viewport viewport;	//creating new port so that the HUD stays locked while map can move around independently
-	
-	private Integer trucks = 6;
-	private Integer worldTimer = 300;	//change to float maybe
-	private static Integer score = 100000;
-	private float timeCount = 0;
-	
+
+	// HUD_UPDATES_1 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+	// Changed HUD to track fortresses, condensed timer into only 1 variable, changed Objects to primitive types.
+	private int fortresses = 6;
+	private float countdown;	//change to float maybe
+	private float gameInterval;
+	private static int score = 100000;
+	// HUD_UPDATES_1 - END OF MODIFICATION  - NP STUDIOS
+
 	private Label scoreLabel;
 	private Label timeLabel;
-	private Label trucksLabel;
-	private Label worldTimerLabel;
+	private Label fortressLabel;
+	private Label countdownLabel;
 	private Label scoreCountLabel;
-	private Label trucksCountLabel;	//we could put mini images of the trucks instead of using an int for the lives
+	private Label fortressCountLabel;	//we could put mini images of the trucks instead of using an int for the lives
 
-	
-	
 	/**
-	 * @param sb	SpriteBatch
-	 * @param game	Kroy instance
+	 * @param sb	SpriteBatch for the game
+	 * @param timeLimit the amount of time before the firestation should be destroyed
 	 */
-	public HUD(SpriteBatch sb, Kroy game) {
+	// HUD_UPDATES_2 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+	// Added timeLimit to the constructor paramters so it can be passed from the main game screen and set countdown
+	// equal to this value.
+	public HUD(SpriteBatch sb, float timeLimit) {
 		viewport = new ScreenViewport(new OrthographicCamera());
-		stage = new Stage(viewport, sb);	//Where we are going to put the HUD elements 
+		stage = new Stage(viewport, sb);	//Where we are going to put the HUD elements
+		countdown = timeLimit;
+	// HUD_UPDATES_2 - END OF MODIFICATION  - NP STUDIOS
 		
 		Table tableHUD = new Table();	//this allows to put widgets in the scene in a clean and ordered way
 		tableHUD.top();	// puts widgets from the top instead of from the centre
 		tableHUD.setFillParent(true);	//makes the table the same size of the stage
 		
-		worldTimerLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-		timeLabel = new Label("TIME:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		countdownLabel = new Label(String.format("%.0f", countdown), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		timeLabel = new Label("TIME LEFT UNTIL FIRE STATION DESTROYED:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 		scoreCountLabel = new Label(String.format("%05d", score), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 		scoreLabel = new Label("SCORE:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-		trucksLabel = new Label("TRUCKS:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-		trucksCountLabel = new Label(String.format("%01d", trucks), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		fortressLabel = new Label("FORTRESSES REMAINING:", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+		fortressCountLabel = new Label(String.format("%01d", fortresses), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
 
 
 		tableHUD.add(timeLabel).expandX().padTop(10);
-		tableHUD.add(worldTimerLabel).expandX().padTop(10);
+		tableHUD.add(countdownLabel).expandX().padTop(10);
 		tableHUD.add(scoreLabel).expandX().padTop(10);			// expandX so that all elements take up the same amount of space
 		tableHUD.add(scoreCountLabel).expandX().padTop(10);
-		tableHUD.add(trucksLabel).expandX().padTop(10);
-		tableHUD.add(trucksCountLabel).expandX().padTop(10);
+		tableHUD.add(fortressLabel).expandX().padTop(10);
+		tableHUD.add(fortressCountLabel).expandX().padTop(10);
 		
 		stage.addActor(tableHUD);
 		
@@ -78,19 +86,25 @@ public class HUD {
 	 * @param dt	Delta Time 
 	 */
 	public void update(float dt) {
-		//timeIncreaseIcon.setPosition(Kroy.);
-		timeCount += dt;
-		if (timeCount >= 1) {
-			if (worldTimer>0) {
-				worldTimer--;
-			}
-			updateScore(-220);
-			worldTimerLabel.setText(String.format("%03d", worldTimer));
-			timeCount =0;
-			scoreCountLabel.setText(String.format("%05d", score));
-			trucksCountLabel.setText(String.format("%01d", Kroy.mainGameScreen.getLives()));
+	// HUD_UPDATES_3 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
+	// Condensed code.
+		if (countdown > 0) {
+			countdown -= dt;
+			gameInterval += dt;
 		}
+		if (gameInterval >= 1) {
+			updateScore(-220);
+			gameInterval = 0;
+		}
+		countdownLabel.setText(String.format("%.0f", abs(countdown)));
+		scoreCountLabel.setText(String.format("%06d", score));
+		fortressCountLabel.setText(String.format("%01d", Kroy.mainGameScreen.getFortressesCount())); }
+
+	// Added a setter for the timer to be used when loading a saved game.
+	public void setTimer(float time) {
+		this.countdown = time;
 	}
+	// HUD_UPDATES_3 - END OF MODIFICATION  - NP STUDIOS - LUCY IVATT
 
 	// HIGHSCORE_3 - START OF MODIFICATION - NP STUDIOS - LUCY IVATT
 	// Deleted getFinalScore() as it was identical to getScore.

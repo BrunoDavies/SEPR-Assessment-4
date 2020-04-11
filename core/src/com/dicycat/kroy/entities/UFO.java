@@ -38,7 +38,7 @@ public class UFO extends Entity {
 	 * @param spawnPos Where we spawn
 	 */
 	public UFO(Vector2 spawnPos, Texture texture, Texture bulletTexture) {
-		super(spawnPos, texture, new Vector2(80, 80), 100);
+		super(spawnPos, texture, new Vector2(80, 80), 100, 500);
 		this.spawnPos = spawnPos;
 		dispenser = new BulletDispenser(this);
 		this.frozen = false;
