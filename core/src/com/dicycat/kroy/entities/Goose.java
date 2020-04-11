@@ -38,6 +38,8 @@ public class Goose extends Entity {
 		SetAnimation(73,97);
 	}
 
+	//MinigameImprovements - START OF MODIFICATION - NPSTUDIOS - Alasdair Pilmore-Bedford
+
 	public void SetAnimation(int StartFrame, int EndFrame){
 		TextureRegion[] tempList =  UpdateAnimation(StartFrame, EndFrame);
 		inFlight = new Animation<TextureRegion>(1/25f, tempList);
@@ -58,6 +60,8 @@ public class Goose extends Entity {
 		animationFrames = tempList.toArray(animationFrames);
 		return animationFrames;
 	}
+
+	//MinigameImprovements - END OF MODIFICATION - NPSTUDIOS
 
 	/**
 	 * Update the movement of the goose and it's hitbox
