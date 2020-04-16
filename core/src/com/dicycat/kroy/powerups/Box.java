@@ -31,6 +31,7 @@ public class Box extends Entity {
         if (truck.isAlive()) {
             if(Intersector.overlaps(hitbox, truck.getHitbox())){
                 Kroy.mainGameScreen.setGameState(GameScreen.GameScreenState.MINIGAME);
+                Kroy.mainGameScreen.addSpawnLocation(this.getPosition());
                 this.die();
                 Kroy.mainGameScreen.game.setScreen(new MinigameScreen(Kroy.mainGameScreen.game, false));
             }

@@ -2,6 +2,7 @@ package com.dicycat.kroy.screens;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -161,6 +162,8 @@ public class GameScreen implements Screen{
 	//POWERUPS_4 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 	private float timeSinceLastBoxSpawn;
 	private int boxSpawnRate;
+	private ArrayList<Vector2> boxSpawnLocations = new ArrayList<Vector2>();
+
 	//POWERUPS_4 - END OF MODIFICATION - NPSTUDIOS
 
 	/**
@@ -225,6 +228,11 @@ public class GameScreen implements Screen{
 
 		//POWERUPS_5 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		boxSpawnRate = 20;
+		boxSpawnLocations.add(new Vector2(750, 1000));
+		boxSpawnLocations.add(new Vector2(1600, 2675));
+		boxSpawnLocations.add(new Vector2(750, 5000));
+		boxSpawnLocations.add(new Vector2(5500, 2675));
+
 		//POWERUPS_5 - END OF MODIFICATION - NPSTUDIOS
 
 		//MINIGAME_INTEGRATION - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
@@ -494,8 +502,7 @@ public class GameScreen implements Screen{
 		//POWERUPS_2 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		timeSinceLastBoxSpawn += Gdx.graphics.getDeltaTime();
 		if (timeSinceLastBoxSpawn >= boxSpawnRate){
-			timeSinceLastBoxSpawn = 0;
-			gameObjects.add(new Box(new Vector2(spawnPosition.x - 135, spawnPosition.y - 20)));
+			spawnBox();
 		}
 		if (freezeEnemies){
 			freezeTimer += Gdx.graphics.getDeltaTime();
@@ -504,6 +511,25 @@ public class GameScreen implements Screen{
 			}
 		}
 		//POWERUPS_2 - END OF MODIFICATION - NPSTUDIOS
+	}
+
+	/**
+	 *
+	 */
+	public void spawnBox(){
+		if (!boxSpawnLocations.isEmpty()){
+			gameObjects.add(new Box(boxSpawnLocations.get(0)));
+			boxSpawnLocations.remove(0);
+		}
+		timeSinceLastBoxSpawn = 0;
+	}
+
+	/**
+	 *
+	 * @param location
+	 */
+	public void addSpawnLocation(Vector2 location){
+		boxSpawnLocations.add(location);
 	}
 
 	//MINIMAP_ADDITION_4 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
