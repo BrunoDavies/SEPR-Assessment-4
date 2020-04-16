@@ -334,6 +334,8 @@ public class FireTruck extends Entity{
 	public void die() {
 		super.die();
 		water.setRemove(true);
+		setUnlimitedWater(false);
+		setDefenceUp(false);
 
 		// STATBAR_REFACTOR_4 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
 		// Removed statbar remove code.
