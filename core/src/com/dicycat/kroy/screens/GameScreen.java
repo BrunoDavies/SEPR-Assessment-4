@@ -524,10 +524,15 @@ public class GameScreen implements Screen{
 		game.batch.begin();
 		game.batch.draw(minimap, 2, 2, 394, 350);
 
-		for (GameObject object : gameObjects){
-			game.batch.draw(object.getTexture(), object.getX()/19, object.getY()/19, object.getWidth()/10,
-					object.getHeight()/10);
-		} // Draws the fortresses and patrols to a minimap scaled down to the in the bottom left corner.
+		for (GameObject object : gameObjects) {
+			if (object instanceof Box) {
+				game.batch.draw(object.getTexture(), object.getX()/19, object.getY()/19, 20, 20);
+			}else {
+				game.batch.draw(object.getTexture(), object.getX() / 19, object.getY() / 19, object.getWidth() / 10,
+						object.getHeight() / 10);
+			}
+		}
+		// Draws the fortresses and patrols to a minimap scaled down to the in the bottom left corner.
 		for (FireTruck truck : firetrucks) {
 			if (truck.getHealthPoints() > 0) {
 				game.batch.draw(truck.getTexture(), truck.getX() / 19, truck.getY() / 19, 20, 25);
