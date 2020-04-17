@@ -304,6 +304,7 @@ public class GameScreen implements Screen{
 			}
 
 			gameObjects.add(new FireStation(textures.getFireStation(), textures.getFireStationDead()));
+
 			switchTrucks(truckNum);
 
 			// DIFFICULTY_6 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
@@ -529,9 +530,7 @@ public class GameScreen implements Screen{
 	 * Renders the objects in "objectsToRender" then clears the list
 	 */
 	private void renderObjects() {
-		for (GameObject object : objectsToRender) {
-			object.render(game.batch);
-		}
+
 		for (FireTruck truck : firetrucks) {
 			if(truck.isAlive()) {
 			truck.render(game.batch);
@@ -548,6 +547,10 @@ public class GameScreen implements Screen{
 			tankbars.get(firetrucks.indexOf(truck)).render(game.batch);
 			// STATBAR_REFACTOR_8 - END OF MODIFICATION  - NP STUDIOS
 			}
+		}
+
+		for (GameObject object : objectsToRender) {
+			object.render(game.batch);
 		}
 
 		// FORTRESS_COUNT_FIX_1 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
