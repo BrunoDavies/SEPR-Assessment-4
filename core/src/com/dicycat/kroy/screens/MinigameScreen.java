@@ -234,7 +234,7 @@ public class MinigameScreen implements Screen {
 			Kroy.mainGameScreen.addTime(45);
 		}else if (this.score <= 30){
 			Kroy.mainGameScreen.ressurectTruck();
-		}else if (this.score > 35){
+		}else if (this.score > 30){
 			Kroy.mainGameScreen.rainDance();
 		}
 	}
