@@ -29,8 +29,8 @@ import com.dicycat.kroy.entities.Fortress;
 import com.dicycat.kroy.entities.UFO;
 import com.dicycat.kroy.gamemap.TiledGameMap;
 import com.dicycat.kroy.misc.StatusIcon;
-import com.dicycat.kroy.powerups.Box;
 import com.dicycat.kroy.misc.StatBar;
+import com.dicycat.kroy.powerups.PowerupBox;
 import com.dicycat.kroy.scenes.HUD;
 import com.dicycat.kroy.scenes.OptionsWindow;
 import com.dicycat.kroy.scenes.PauseWindow;
@@ -522,7 +522,7 @@ public class GameScreen implements Screen{
 	 */
 	public void spawnBox(){
 		if (!boxSpawnLocations.isEmpty()){
-			gameObjects.add(new Box(boxSpawnLocations.get(0)));
+			gameObjects.add(new PowerupBox(boxSpawnLocations.get(0)));
 			boxSpawnLocations.remove(0);
 		}
 		timeSinceLastBoxSpawn = 0;
