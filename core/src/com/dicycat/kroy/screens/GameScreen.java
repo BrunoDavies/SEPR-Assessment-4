@@ -228,6 +228,7 @@ public class GameScreen implements Screen{
 		updateTruckStats(); //ensures that the stats are correct with current difficulty selected
 		// DIFFICULTY_2 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 
+
 		//POWERUPS_5 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		boxSpawnRate = 20;
 		boxSpawnLocations.add(new Vector2(750, 1000));
@@ -236,6 +237,7 @@ public class GameScreen implements Screen{
 		boxSpawnLocations.add(new Vector2(5500, 2675));
 
 		//POWERUPS_5 - END OF MODIFICATION - NPSTUDIOS
+
 
 		//MINIGAME_INTEGRATION - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		start = true;
@@ -488,7 +490,8 @@ public class GameScreen implements Screen{
 		switchTrucks();
 
 		lastPatrol += Gdx.graphics.getDeltaTime();
-		if(numberOfPatrolsSpawned <= difficultyStats[difficultyChosen][patrolMaxIndex]) {
+		//UR_PATROLS_2 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+		if(numberOfPatrolsSpawned < difficultyStats[difficultyChosen][patrolMaxIndex]) {
 			if (lastPatrol >= patrolUpdateRate) {
 				lastPatrol = 0;
 
@@ -506,8 +509,11 @@ public class GameScreen implements Screen{
 
 
 				}
+				numberOfPatrolsSpawned++;
 			}
 		}
+		//UR_PATROLS_2 - END OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+
 		//POWERUPS_2 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		timeSinceLastBoxSpawn += Gdx.graphics.getDeltaTime();
 		if (timeSinceLastBoxSpawn >= boxSpawnRate){
