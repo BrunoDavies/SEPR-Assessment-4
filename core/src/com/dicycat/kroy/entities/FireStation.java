@@ -20,7 +20,7 @@ public class FireStation extends Entity {
 	 * extended
 	 */
 	public FireStation(Texture alive, Texture dead) {
-		super(new Vector2(3600, 4100), alive, new Vector2(298, 175), 100);
+		super(new Vector2(3595, 4000), alive, new Vector2(298, 175), 100);
 		this.textureDead = dead;
 	}
 
