@@ -191,13 +191,13 @@ public class GameScreen implements Screen{
 		this.truckNum = truckNum;
 
         timeIncreaseIcon = new StatusIcon(Vector2.Zero,"TimeIncrease.png");
-        timeIncrease = true;
+        timeIncrease = false;
         freezeEnemiesIcon = new StatusIcon(Vector2.Zero,"FreezeEnemies.png");
-        freezeEnemies = true;
+        freezeEnemies = false;
         rainDanceIcon = new StatusIcon(Vector2.Zero,"RainDance.png");
-        rainDance = true;
+        rainDance = false;
         revivedFireTruckIcon = new StatusIcon(Vector2.Zero,"Ressurected.png");
-        revivedFireTruck = true;
+        revivedFireTruck = false;
 
 		lastPatrol = Gdx.graphics.getDeltaTime();
 		timeSinceLastBoxSpawn = Gdx.graphics.getDeltaTime();
@@ -304,7 +304,10 @@ public class GameScreen implements Screen{
 			}
 
 			gameObjects.add(new FireStation(textures.getFireStation(), textures.getFireStationDead()));
-
+			gameObjects.add(freezeEnemiesIcon);
+			gameObjects.add(revivedFireTruckIcon);
+			gameObjects.add(rainDanceIcon);
+			gameObjects.add(timeIncreaseIcon);
 			switchTrucks(truckNum);
 
 			// DIFFICULTY_6 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
@@ -669,20 +672,20 @@ public class GameScreen implements Screen{
 		float cameraX = Math.max(0.5f*Kroy.width*zoom, Math.min(currentTruck.getX(), 6884-(0.5f*Kroy.width*zoom)));
 		float cameraY = Math.max(0.5f*Kroy.height*zoom, Math.min(currentTruck.getY(), 6043-(0.5f*Kroy.height*zoom)));
 		gamecam.position.lerp(new Vector3(cameraX, cameraY,gamecam.position.z),0.1f);// sets the new camera position based on the current position of the FireTruck
-        Vector2 iconPosition = new Vector2(gamecam.position.x - 260, gamecam.position.y + 327);
+        Vector2 iconPosition = new Vector2(gamecam.position.x - 260, gamecam.position.y + 460);
         if (timeIncreaseIcon.isEnabled()) {
             timeIncreaseIcon.setPosition(iconPosition);
         }
         if (freezeEnemiesIcon.isEnabled()){
-			iconPosition = new Vector2 (gamecam.position.x + 130, gamecam.position.y + 327);
+			iconPosition = new Vector2 (gamecam.position.x + 250, gamecam.position.y + 460);
             freezeEnemiesIcon.setPosition(iconPosition);
         }
         if (rainDanceIcon.isEnabled()){
-			iconPosition = new Vector2 (gamecam.position.x + 170, gamecam.position.y + 327);
+			iconPosition = new Vector2 (gamecam.position.x + 300, gamecam.position.y + 460);
             rainDanceIcon.setPosition(iconPosition);
         }
         if (revivedFireTruckIcon.isEnabled()){
-			iconPosition = new Vector2 (gamecam.position.x  + 500, gamecam.position.y + 327);
+			iconPosition = new Vector2 (gamecam.position.x  + 350, gamecam.position.y + 460);
             revivedFireTruckIcon.setPosition(iconPosition);
         }
 		gamecam.update();

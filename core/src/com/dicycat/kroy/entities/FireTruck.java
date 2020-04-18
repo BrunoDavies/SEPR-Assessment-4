@@ -86,10 +86,10 @@ public class FireTruck extends Entity{
 		water = new WaterStream(Vector2.Zero);
 
 		defenceUpIcon = new StatusIcon(statusIconPos,"DefenceUp.png");
-		Kroy.mainGameScreen.addGameObject(defenceUpIcon);
+		//Kroy.mainGameScreen.addGameObject(defenceUpIcon);
 
 		unlimitedWaterIcon = new StatusIcon(statusIconPos,"UnlimitedWater.png");
-		Kroy.mainGameScreen.addGameObject(unlimitedWaterIcon);
+		//Kroy.mainGameScreen.addGameObject(unlimitedWaterIcon);
 
 	}
 
@@ -248,16 +248,20 @@ public class FireTruck extends Entity{
 		if (this.defenceUp){
 			if (!(this.defenceUpIcon.isEnabled())) {
 				this.defenceUpIcon.addIcon();
+				this.defenceUpIcon.setRemove(false);
 			}
 		} else if (this.defenceUpIcon.isEnabled()){
 			this.defenceUpIcon.removeIcon();
+			this.defenceUpIcon.setRemove(true);
 		}
 		if (this.unlimitedWater){
 			if (!(this.unlimitedWaterIcon.isEnabled())) {
 				this.unlimitedWaterIcon.addIcon();
+				this.unlimitedWaterIcon.setRemove(false);
 			}
 		} else if (this.unlimitedWaterIcon.isEnabled()){
-			this.unlimitedWaterIcon.removeIcon();
+			this.defenceUpIcon.removeIcon();
+			this.unlimitedWaterIcon.setRemove(true);
 		}
 	}
 	//POWERUPS_1 - END OF MODIFICATION - NPSTUDIOS
