@@ -621,7 +621,8 @@ public class GameScreen implements Screen{
 		for (FireTruck truck : firetrucks){
 			if (!truck.isAlive()){
 				truck.setRemove(false);
-				truck.setHealthPoints(1000);
+				truck.setPosition(spawnPosition);
+				truck.setHealthPoints(truck.getMaxHealthPoints());
 				truck.setCurrentWater(truck.getMaxWater());
 				break;
 			}

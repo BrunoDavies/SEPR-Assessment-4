@@ -345,8 +345,8 @@ public class FireTruck extends Entity{
         fortressList = Kroy.mainGameScreen.getFortresses(); //Create a new list which contains the fortresses
 
 
-        for (Object fortress : fortressList){
-            addHealth(10); //Add 10 to the health of each fortress each time a truck is killed - so that fortresses improve their health over time
+        for (Fortress fortress : fortressList){
+            fortress.addHealth(10); //Add 10 to the health of each fortress each time a truck is killed - so that fortresses improve their health over time
 		// [FORTRESS_IMPROVEMENT] - END OF MODIFICATION  - [NP_STUDIOS] ----
         }
 
