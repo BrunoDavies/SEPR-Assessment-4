@@ -2,6 +2,7 @@ package com.dicycat.kroy.screens;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -28,8 +29,8 @@ import com.dicycat.kroy.entities.Fortress;
 import com.dicycat.kroy.entities.UFO;
 import com.dicycat.kroy.gamemap.TiledGameMap;
 import com.dicycat.kroy.misc.StatusIcon;
-import com.dicycat.kroy.powerups.Box;
 import com.dicycat.kroy.misc.StatBar;
+import com.dicycat.kroy.powerups.PowerupBox;
 import com.dicycat.kroy.scenes.HUD;
 import com.dicycat.kroy.scenes.OptionsWindow;
 import com.dicycat.kroy.scenes.PauseWindow;
@@ -161,6 +162,8 @@ public class GameScreen implements Screen{
 	//POWERUPS_4 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 	private float timeSinceLastBoxSpawn;
 	private int boxSpawnRate;
+	private ArrayList<Vector2> boxSpawnLocations = new ArrayList<Vector2>();
+
 	//POWERUPS_4 - END OF MODIFICATION - NPSTUDIOS
 
 	/**
@@ -225,6 +228,11 @@ public class GameScreen implements Screen{
 
 		//POWERUPS_5 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		boxSpawnRate = 20;
+		boxSpawnLocations.add(new Vector2(750, 1000));
+		boxSpawnLocations.add(new Vector2(1600, 2675));
+		boxSpawnLocations.add(new Vector2(750, 5000));
+		boxSpawnLocations.add(new Vector2(5500, 2675));
+
 		//POWERUPS_5 - END OF MODIFICATION - NPSTUDIOS
 
 		//MINIGAME_INTEGRATION - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
@@ -284,6 +292,8 @@ public class GameScreen implements Screen{
 	@Override
 	public void show() {
 		//MINIGAME_INTEGRATION - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
+		//Most of the show() method has been moved into this if statement that means the contents are only ran upon the
+		//first starting of an instance of gameScreen.
 		if (start) {
 			objectsToAdd = new ArrayList<GameObject>();
 			gameObjects = new ArrayList<GameObject>();
@@ -494,16 +504,36 @@ public class GameScreen implements Screen{
 		//POWERUPS_2 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		timeSinceLastBoxSpawn += Gdx.graphics.getDeltaTime();
 		if (timeSinceLastBoxSpawn >= boxSpawnRate){
-			timeSinceLastBoxSpawn = 0;
-			gameObjects.add(new Box(new Vector2(spawnPosition.x - 135, spawnPosition.y - 20)));
+			spawnBox();
 		}
+		//The code above is a timer for the powerup box spawning
 		if (freezeEnemies){
 			freezeTimer += Gdx.graphics.getDeltaTime();
-			if (freezeTimer >= 15){
+			if (freezeTimer >= (15 + (5*(1 - difficultyChosen)))){ // The powerups are stronger on easy mode / weaker on harder difficulties
 				freezePatrols(false);
 			}
 		}
+		// The code above is a timer for how long the freeze patrols powerup lasts.
 		//POWERUPS_2 - END OF MODIFICATION - NPSTUDIOS
+	}
+
+	/**
+	 *
+	 */
+	public void spawnBox(){
+		if (!boxSpawnLocations.isEmpty()){
+			gameObjects.add(new PowerupBox(boxSpawnLocations.get(0)));
+			boxSpawnLocations.remove(0);
+		}
+		timeSinceLastBoxSpawn = 0;
+	}
+
+	/**
+	 *
+	 * @param location
+	 */
+	public void addSpawnLocation(Vector2 location){
+		boxSpawnLocations.add(location);
 	}
 
 	//MINIMAP_ADDITION_4 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
@@ -591,7 +621,8 @@ public class GameScreen implements Screen{
 		for (FireTruck truck : firetrucks){
 			if (!truck.isAlive()){
 				truck.setRemove(false);
-				truck.setHealthPoints(1000);
+				truck.setPosition(spawnPosition);
+				truck.setHealthPoints(truck.getMaxHealthPoints());
 				truck.setCurrentWater(truck.getMaxWater());
 				break;
 			}
@@ -618,6 +649,12 @@ public class GameScreen implements Screen{
 		gameTimer = gameTimer + time;
 	}
 	//POWERUPS_3 - END OF MODIFICATION - NPSTUDIOS
+
+	//DIFFICULTY_FOR_POWERUPS - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
+	public int getDifiicultyChosesn(){
+		return difficultyChosen;
+	}
+	//DIFFICULTY_FOR_POWERUPS - END OF MODIFICATION - NPSTUDIOS
 
 	/**
 	 * Draws all debug objects for one frame
@@ -666,21 +703,21 @@ public class GameScreen implements Screen{
 		float cameraX = Math.max(0.5f*Kroy.width*zoom, Math.min(currentTruck.getX(), 6884-(0.5f*Kroy.width*zoom)));
 		float cameraY = Math.max(0.5f*Kroy.height*zoom, Math.min(currentTruck.getY(), 6043-(0.5f*Kroy.height*zoom)));
 		gamecam.position.lerp(new Vector3(cameraX, cameraY,gamecam.position.z),0.1f);// sets the new camera position based on the current position of the FireTruck
-        Vector2 tempBoi = new Vector2(gamecam.position.x - 260, gamecam.position.y + 327);
+        Vector2 iconPosition = new Vector2(gamecam.position.x - 260, gamecam.position.y + 327);
         if (timeIncreaseIcon.isEnabled()) {
-            timeIncreaseIcon.setPosition(tempBoi);
+            timeIncreaseIcon.setPosition(iconPosition);
         }
         if (freezeEnemiesIcon.isEnabled()){
-            tempBoi = new Vector2 (gamecam.position.x + 130, gamecam.position.y + 327);
-            freezeEnemiesIcon.setPosition(tempBoi);
+			iconPosition = new Vector2 (gamecam.position.x + 130, gamecam.position.y + 327);
+            freezeEnemiesIcon.setPosition(iconPosition);
         }
         if (rainDanceIcon.isEnabled()){
-            tempBoi = new Vector2 (gamecam.position.x + 170, gamecam.position.y + 327);
-            rainDanceIcon.setPosition(tempBoi);
+			iconPosition = new Vector2 (gamecam.position.x + 170, gamecam.position.y + 327);
+            rainDanceIcon.setPosition(iconPosition);
         }
         if (revivedFireTruckIcon.isEnabled()){
-            tempBoi = new Vector2 (gamecam.position.x  + 500, gamecam.position.y + 327);
-            revivedFireTruckIcon.setPosition(tempBoi);
+			iconPosition = new Vector2 (gamecam.position.x  + 500, gamecam.position.y + 327);
+            revivedFireTruckIcon.setPosition(iconPosition);
         }
 		gamecam.update();
 

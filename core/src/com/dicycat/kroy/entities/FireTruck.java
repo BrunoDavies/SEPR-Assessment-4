@@ -204,14 +204,14 @@ public class FireTruck extends Entity{
 		}
 		//POWERUPS_11 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		if (defenceUp){
-			defenceUpTimer += Gdx.graphics.getDeltaTime();
-			if (defenceUpTimer >= 15){
+			defenceUpTimer += Gdx.graphics.getDeltaTime(); // This if statement holds the timer for the defence powerup.
+			if (defenceUpTimer >= (15+(5*(1-Kroy.mainGameScreen.getDifiicultyChosesn())))){
 				setDefenceUp(false);
 			}
 		}
 		if (unlimitedWater){
-			unlimitedWaterTimer += Gdx.graphics.getDeltaTime();
-			if (unlimitedWaterTimer >= 15){
+			unlimitedWaterTimer += Gdx.graphics.getDeltaTime(); // This if statement holds the timer for the unlimited water powerup.
+			if (unlimitedWaterTimer >= (15+(5*(1-Kroy.mainGameScreen.getDifiicultyChosesn())))){
 				setUnlimitedWater(false);
 			}
 		}
@@ -334,6 +334,8 @@ public class FireTruck extends Entity{
 	public void die() {
 		super.die();
 		water.setRemove(true);
+		setUnlimitedWater(false);
+		setDefenceUp(false);
 
 		// STATBAR_REFACTOR_4 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
 		// Removed statbar remove code.
@@ -343,8 +345,8 @@ public class FireTruck extends Entity{
         fortressList = Kroy.mainGameScreen.getFortresses(); //Create a new list which contains the fortresses
 
 
-        for (Object fortress : fortressList){
-            addHealth(10); //Add 10 to the health of each fortress each time a truck is killed - so that fortresses improve their health over time
+        for (Fortress fortress : fortressList){
+            fortress.addHealth(10); //Add 10 to the health of each fortress each time a truck is killed - so that fortresses improve their health over time
 		// [FORTRESS_IMPROVEMENT] - END OF MODIFICATION  - [NP_STUDIOS] ----
         }
 

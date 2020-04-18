@@ -38,14 +38,14 @@ public class Pipe extends GameObject {
 	 * @param spawnPos The spawn position
 	 */
 	public Pipe(Vector2 spawnPos, Texture pipeTexture) {
-		super(spawnPos, pipeTexture, new Vector2(2000, 1500));
-		Vector2 tempVector =  spawnPos;
-		tempVector.x += -1400;
-		tempVector.y += 500;
-		hitboxes[0] = new Rectangle(tempVector.x + 1000, 0, 30, 500);
-		hitboxes[1] = new Rectangle(tempVector.x + 1000, 0, 30, 500); // 1158
+		super(spawnPos, pipeTexture, new Vector2(2000, 1200));
+		Vector2 repositionedHitbox =  spawnPos;
+		repositionedHitbox.x += -1400;
+		repositionedHitbox.y += 500;
+		hitboxes[0] = new Rectangle(repositionedHitbox.x + 1000, 0, 30, 500);
+		hitboxes[1] = new Rectangle(repositionedHitbox.x + 1000, 0, 30, 500); // 1158
 		startTime = Instant.now();
-		setPosition(tempVector);
+		setPosition(repositionedHitbox);
 	}
 
 
