@@ -292,6 +292,8 @@ public class GameScreen implements Screen{
 	@Override
 	public void show() {
 		//MINIGAME_INTEGRATION - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
+		//Most of the show() method has been moved into this if statement that means the contents are only ran upon the
+		//first starting of an instance of gameScreen.
 		if (start) {
 			objectsToAdd = new ArrayList<GameObject>();
 			gameObjects = new ArrayList<GameObject>();
@@ -504,12 +506,14 @@ public class GameScreen implements Screen{
 		if (timeSinceLastBoxSpawn >= boxSpawnRate){
 			spawnBox();
 		}
+		//The code above is a timer for the powerup box spawning
 		if (freezeEnemies){
 			freezeTimer += Gdx.graphics.getDeltaTime();
-			if (freezeTimer >= 15){
+			if (freezeTimer >= (15 + (5*(1 - difficultyChosen)))){ // The powerups are stronger on easy mode / weaker on harder difficulties
 				freezePatrols(false);
 			}
 		}
+		// The code above is a timer for how long the freeze patrols powerup lasts.
 		//POWERUPS_2 - END OF MODIFICATION - NPSTUDIOS
 	}
 
@@ -644,6 +648,12 @@ public class GameScreen implements Screen{
 		gameTimer = gameTimer + time;
 	}
 	//POWERUPS_3 - END OF MODIFICATION - NPSTUDIOS
+
+	//DIFFICULTY_FOR_POWERUPS - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
+	public int getDifiicultyChosesn(){
+		return difficultyChosen;
+	}
+	//DIFFICULTY_FOR_POWERUPS - END OF MODIFICATION - NPSTUDIOS
 
 	/**
 	 * Draws all debug objects for one frame

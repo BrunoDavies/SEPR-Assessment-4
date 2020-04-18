@@ -204,14 +204,14 @@ public class FireTruck extends Entity{
 		}
 		//POWERUPS_11 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		if (defenceUp){
-			defenceUpTimer += Gdx.graphics.getDeltaTime();
-			if (defenceUpTimer >= 15){
+			defenceUpTimer += Gdx.graphics.getDeltaTime(); // This if statement holds the timer for the defence powerup.
+			if (defenceUpTimer >= (15+(5*(1-Kroy.mainGameScreen.getDifiicultyChosesn())))){
 				setDefenceUp(false);
 			}
 		}
 		if (unlimitedWater){
-			unlimitedWaterTimer += Gdx.graphics.getDeltaTime();
-			if (unlimitedWaterTimer >= 15){
+			unlimitedWaterTimer += Gdx.graphics.getDeltaTime(); // This if statement holds the timer for the unlimited water powerup.
+			if (unlimitedWaterTimer >= (15+(5*(1-Kroy.mainGameScreen.getDifiicultyChosesn())))){
 				setUnlimitedWater(false);
 			}
 		}
