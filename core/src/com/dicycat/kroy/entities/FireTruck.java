@@ -80,16 +80,12 @@ public class FireTruck extends Entity{
 
 		firing = false;
 		//Power ups
-		defenceUp = false;
-		unlimitedWater = false;
+		defenceUp = true;
+		unlimitedWater = true;
 
 		water = new WaterStream(Vector2.Zero);
-
 		defenceUpIcon = new StatusIcon(statusIconPos,"DefenceUp.png");
-		//Kroy.mainGameScreen.addGameObject(defenceUpIcon);
-
 		unlimitedWaterIcon = new StatusIcon(statusIconPos,"UnlimitedWater.png");
-		//Kroy.mainGameScreen.addGameObject(unlimitedWaterIcon);
 
 	}
 
@@ -176,8 +172,8 @@ public class FireTruck extends Entity{
 		//Move the hit box to it's new centred position according to the sprite's position.
         hitbox.setCenter(getCentre().x, getCentre().y);
 
-		updateStatusIcons();
 		assignStatusEffectArray();
+		updateStatusIcons();
 		moveIconByFixedPoint();
 
 		// STATBAR_REFACTOR_3 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
@@ -224,11 +220,11 @@ public class FireTruck extends Entity{
 	// then adds an offset value to stop the icons from overlapping
 	private void moveIconByFixedPoint(){
 		int offPoint = 0;
-		if (defenceUpIcon.isEnabled()){
+		if (defenceUp){
 			offPoint += 15;
 			defenceUpIcon.setPosition(getCentre().add(20 - offPoint,25));
 		}
-		if (unlimitedWaterIcon.isEnabled()){
+		if (unlimitedWater){
 			offPoint += 15;
 			unlimitedWaterIcon.setPosition(getCentre().add(20 - offPoint,25));
 		}
@@ -246,22 +242,24 @@ public class FireTruck extends Entity{
 
 	private void updateStatusIcons(){
 		if (this.defenceUp){
-			if (!(this.defenceUpIcon.isEnabled())) {
-				this.defenceUpIcon.addIcon();
-				this.defenceUpIcon.setRemove(false);
+			if (!defenceUpIcon.isEnabled()) {
+				defenceUpIcon = new StatusIcon(statusIconPos, "DefenceUp.png");
+				Kroy.mainGameScreen.addGameObject(defenceUpIcon);
+				defenceUpIcon.setEnabled(true);
 			}
-		} else if (this.defenceUpIcon.isEnabled()){
-			this.defenceUpIcon.removeIcon();
-			this.defenceUpIcon.setRemove(true);
+		} else {
+			defenceUpIcon.setEnabled(false);
+			defenceUpIcon.setRemove(true);
 		}
 		if (this.unlimitedWater){
-			if (!(this.unlimitedWaterIcon.isEnabled())) {
-				this.unlimitedWaterIcon.addIcon();
-				this.unlimitedWaterIcon.setRemove(false);
+			if (!unlimitedWaterIcon.isEnabled()) {
+				unlimitedWaterIcon = new StatusIcon(statusIconPos, "UnlimitedWater.png");
+				Kroy.mainGameScreen.addGameObject(unlimitedWaterIcon);
+				unlimitedWaterIcon.setEnabled(true);
 			}
-		} else if (this.unlimitedWaterIcon.isEnabled()){
-			this.defenceUpIcon.removeIcon();
-			this.unlimitedWaterIcon.setRemove(true);
+		} else {
+			unlimitedWaterIcon.setEnabled(false);
+			unlimitedWaterIcon.setRemove(true);
 		}
 	}
 	//POWERUPS_1 - END OF MODIFICATION - NPSTUDIOS

@@ -156,6 +156,7 @@ public class GameScreen implements Screen{
 	private ArrayList<StatBar> healthbars = new ArrayList<StatBar>();
 	private ArrayList<StatBar> tankbars = new ArrayList<StatBar>();
 	private ArrayList<StatBar> fortressHealthBars = new ArrayList<>();
+	private ArrayList<StatusIcon> activeStatusIcons = new ArrayList<>();
 	// STATBAR_REFACTOR_6 - END OF MODIFICATION  - NP STUDIOS
 
 	//POWERUPS_4 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
@@ -198,6 +199,7 @@ public class GameScreen implements Screen{
         rainDance = false;
         revivedFireTruckIcon = new StatusIcon(Vector2.Zero,"Ressurected.png");
         revivedFireTruck = false;
+        activeStatusIcons = new ArrayList<>();
 
 		lastPatrol = Gdx.graphics.getDeltaTime();
 		timeSinceLastBoxSpawn = Gdx.graphics.getDeltaTime();
@@ -247,34 +249,51 @@ public class GameScreen implements Screen{
 
 	// Sets the icons to enabled if they are currently active
     private void updateStatusIcons(){
-        if (timeIncrease){
-            if (!(timeIncreaseIcon.isEnabled())) {
-                timeIncreaseIcon.addIcon();
-            }
-        } else if (timeIncreaseIcon.isEnabled()){
-            timeIncreaseIcon.removeIcon();
-        }
+
+        if (timeIncrease) {
+			if (!timeIncreaseIcon.isEnabled()) {
+				timeIncreaseIcon = new StatusIcon(Vector2.Zero, "TimeIncrease.png");
+				activeStatusIcons.add(timeIncreaseIcon);
+				timeIncreaseIcon.setEnabled(true);
+			}
+		} else {
+			activeStatusIcons.remove(timeIncreaseIcon);
+        	timeIncreaseIcon.setEnabled(false);
+        	timeIncreaseIcon.setRemove(true);
+		}
         if (rainDance){
-            if (!(rainDanceIcon.isEnabled())) {
-                rainDanceIcon.addIcon();
-            }
-        } else if (rainDanceIcon.isEnabled()){
-            rainDanceIcon.removeIcon();
-        }
+			if (!rainDanceIcon.isEnabled()) {
+				rainDanceIcon = new StatusIcon(Vector2.Zero, "RainDance.png");
+				activeStatusIcons.add(rainDanceIcon);
+				rainDanceIcon.setEnabled(true);
+			}
+        } else {
+			activeStatusIcons.remove(rainDanceIcon);
+        	rainDanceIcon.setEnabled(false);
+			rainDanceIcon.setRemove(true);
+		}
         if (freezeEnemies){
-            if (!(freezeEnemiesIcon.isEnabled())) {
-                freezeEnemiesIcon.addIcon();
-            }
-        } else if (freezeEnemiesIcon.isEnabled()){
-            freezeEnemiesIcon.removeIcon();
-        }
+			if (!freezeEnemiesIcon.isEnabled()) {
+				freezeEnemiesIcon = new StatusIcon(Vector2.Zero, "FreezeEnemies.png");
+				activeStatusIcons.add(freezeEnemiesIcon);
+				freezeEnemiesIcon.setEnabled(true);
+			}
+        } else {
+        	activeStatusIcons.remove(freezeEnemiesIcon);
+        	freezeEnemiesIcon.setEnabled(false);
+			freezeEnemiesIcon.setRemove(true);
+		}
         if (revivedFireTruck){
-            if (!(revivedFireTruckIcon.isEnabled())) {
-                revivedFireTruckIcon.addIcon();
-            }
-        } else if (revivedFireTruckIcon.isEnabled()){
-            revivedFireTruckIcon.removeIcon();
-        }
+			if (!revivedFireTruckIcon.isEnabled()) {
+				revivedFireTruckIcon = new StatusIcon(Vector2.Zero, "Ressurected.png");
+				activeStatusIcons.add(revivedFireTruckIcon);
+				revivedFireTruckIcon.setEnabled(true);
+			}
+        } else {
+			activeStatusIcons.remove(revivedFireTruckIcon);
+        	revivedFireTruckIcon.setEnabled(false);
+			revivedFireTruckIcon.setRemove(true);
+		}
     }
 	//POWERUPS_6 - END OF MODIFICATION - NPSTUDIOS
 
@@ -304,10 +323,10 @@ public class GameScreen implements Screen{
 			}
 
 			gameObjects.add(new FireStation(textures.getFireStation(), textures.getFireStationDead()));
-			gameObjects.add(freezeEnemiesIcon);
-			gameObjects.add(revivedFireTruckIcon);
-			gameObjects.add(rainDanceIcon);
-			gameObjects.add(timeIncreaseIcon);
+			activeStatusIcons.add(freezeEnemiesIcon);
+			activeStatusIcons.add(revivedFireTruckIcon);
+			activeStatusIcons.add(rainDanceIcon);
+			activeStatusIcons.add(timeIncreaseIcon);
 			switchTrucks(truckNum);
 
 			// DIFFICULTY_6 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
@@ -396,8 +415,16 @@ public class GameScreen implements Screen{
 				//RENDER_ORDER - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 				gameMap.renderBuildings(gamecam); // Renders the buildings and the foreground items which are not entities, moved below renderObjects() so the firetrucks can no longer drive on the roofs.
 				//RENDER_ORDER - END OF MODIFICATION - NPSTUDIOS
-				hud.stage.draw();
 
+				game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+				game.batch.setProjectionMatrix(gamecam.combined);	//Mic:only renders the part of the map where the camera is
+				game.batch.begin();
+				for (StatusIcon icon : activeStatusIcons) {
+					icon.render(game.batch);
+				}
+				game.batch.end();
+
+				hud.stage.draw();
 				//MINIMAP_ADDITION_3 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 				drawMinimap();
 				//MINIMAP_ADDITION_3 - END OF MODIFICATION - NPSTUDIOS
@@ -525,6 +552,7 @@ public class GameScreen implements Screen{
 			}
 			//Draws the firetrucks on their relative position on the minimap. size is not to scale to make their position obvious and clear.
 		}
+
 		game.batch.end();
 	}
 	//MINIMAP_ADDITION_4 - END OF MODIFICATION - NPSTUDIOS
@@ -552,9 +580,11 @@ public class GameScreen implements Screen{
 			}
 		}
 
+
 		for (GameObject object : objectsToRender) {
 			object.render(game.batch);
 		}
+
 
 		// FORTRESS_COUNT_FIX_1 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
 		// Previously the game was ending when only 3 fortresses were destroyed so we added this code to
@@ -572,7 +602,6 @@ public class GameScreen implements Screen{
 		}
 		fortressesCount = alive;
 		// FORTRESS_COUNT_FIX_1 - END OF MODIFICATION  - NP STUDIOS
-
 
 		objectsToRender.clear();
 	}
@@ -594,6 +623,7 @@ public class GameScreen implements Screen{
 	}
 	//POWERUPS_3 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 	public void ressurectTruck(){
+		revivedFireTruck = true;
 		for (FireTruck truck : firetrucks){
 			if (!truck.isAlive()){
 				truck.setRemove(false);
@@ -613,6 +643,7 @@ public class GameScreen implements Screen{
 		}
 	}
 	public void rainDance(){
+		rainDance = true;
 		for (GameObject obj : gameObjects){
 			if (obj instanceof UFO) {
 				obj.die();
@@ -621,6 +652,7 @@ public class GameScreen implements Screen{
 	}
 
 	public void addTime(float time){
+		timeIncrease = true;
 		gameTimer = gameTimer + time;
 	}
 	//POWERUPS_3 - END OF MODIFICATION - NPSTUDIOS
@@ -673,18 +705,18 @@ public class GameScreen implements Screen{
 		float cameraY = Math.max(0.5f*Kroy.height*zoom, Math.min(currentTruck.getY(), 6043-(0.5f*Kroy.height*zoom)));
 		gamecam.position.lerp(new Vector3(cameraX, cameraY,gamecam.position.z),0.1f);// sets the new camera position based on the current position of the FireTruck
         Vector2 iconPosition = new Vector2(gamecam.position.x - 260, gamecam.position.y + 460);
-        if (timeIncreaseIcon.isEnabled()) {
+        if (timeIncrease) {
             timeIncreaseIcon.setPosition(iconPosition);
         }
-        if (freezeEnemiesIcon.isEnabled()){
+        if (freezeEnemies){
 			iconPosition = new Vector2 (gamecam.position.x + 250, gamecam.position.y + 460);
             freezeEnemiesIcon.setPosition(iconPosition);
         }
-        if (rainDanceIcon.isEnabled()){
+        if (rainDance){
 			iconPosition = new Vector2 (gamecam.position.x + 300, gamecam.position.y + 460);
             rainDanceIcon.setPosition(iconPosition);
         }
-        if (revivedFireTruckIcon.isEnabled()){
+        if (revivedFireTruck){
 			iconPosition = new Vector2 (gamecam.position.x  + 350, gamecam.position.y + 460);
             revivedFireTruckIcon.setPosition(iconPosition);
         }
