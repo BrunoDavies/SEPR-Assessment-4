@@ -27,10 +27,10 @@ public class Pipe extends GameObject {
 	private Rectangle[] hitboxes = new Rectangle[2]; // Hitboxes for the pipe
 	private boolean gameEnd = false; // Returns true if the pipe collides with the goose
 	private Instant startTime; // When the pipe is created
-	private int lifeTime = 6; // How long the pipe is on screen for
+	private int lifeTime = 20; // How long the pipe is on screen for
 	private int xOffset = 1050;
-	private int yOffset = 0;
-	private int yOffset2 = 720;
+	private int yOffset = 150;
+	private int yOffset2 = 900;
 
 	/**
 	 * Generates a pipe with the texture "pipe.png" and at the coordinates specified

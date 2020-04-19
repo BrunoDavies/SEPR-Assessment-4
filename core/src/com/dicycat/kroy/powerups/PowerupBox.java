@@ -17,12 +17,12 @@ import com.dicycat.kroy.screens.MinigameScreen;
  * @author NPSTUDIOS - Bethany Gilmore
  *
  */
-public class Box extends Entity {
+public class PowerupBox extends Entity {
     private Circle hitbox;
 
-    public Box(Vector2 spawnPos){
+    public PowerupBox(Vector2 spawnPos){
         super(spawnPos, Kroy.mainGameScreen.textures.getPowerupBox(), new Vector2(50,50),10, 10);
-        hitbox = new Circle(spawnPos.x, spawnPos.y, 15);
+        hitbox = new Circle(spawnPos.x + 25, spawnPos.y + 25, 30);
     }
     @Override
 
@@ -31,6 +31,7 @@ public class Box extends Entity {
         if (truck.isAlive()) {
             if(Intersector.overlaps(hitbox, truck.getHitbox())){
                 Kroy.mainGameScreen.setGameState(GameScreen.GameScreenState.MINIGAME);
+                Kroy.mainGameScreen.addSpawnLocation(this.getPosition());
                 this.die();
                 Kroy.mainGameScreen.game.setScreen(new MinigameScreen(Kroy.mainGameScreen.game, false));
             }

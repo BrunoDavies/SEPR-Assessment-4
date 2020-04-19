@@ -49,7 +49,7 @@ public class MinigameScreen implements Screen {
 	private PauseWindow pauseWindow;
 	private OptionsWindow optionsWindow;
 
-	private int score = -2; // Starts negative to give time for the pipes to reach the player 
+	private int score = -4; // Starts negative to give time for the pipes to reach the player
 	private String scoreText = ""; // Instantiates the scoretext variable
 	BitmapFont font;
 	private float time; // Integer used to play goose animation on set intervals
@@ -215,8 +215,8 @@ public class MinigameScreen implements Screen {
 	 * the score when a pipe is generated.
 	 */
 	private void createPipe() {
-		int height = (int) Math.round(-300 * Math.random()) - 900;
-		pipes.add(new Pipe(new Vector2(800, height), pipeTexture));
+		int height = (int) Math.round(-300 * Math.random()) - 1100;
+		pipes.add(new Pipe(new Vector2(1600, height), pipeTexture));
 		score++;
 		// System.out.println(score);
 	}
@@ -224,17 +224,17 @@ public class MinigameScreen implements Screen {
 	private void applyPowerUp(){
 		if (this.score <= 1){
 			return;
-		}else if (this.score <= 10){
+		}else if (this.score <= 5){
 			Kroy.mainGameScreen.getPlayer().setUnlimitedWater(true);
-		}else if (this.score <= 20){
+		}else if (this.score <= 10){
 			Kroy.mainGameScreen.getPlayer().setDefenceUp(true);
-		}else if (this.score <= 40){
+		}else if (this.score <= 20){
 			Kroy.mainGameScreen.freezePatrols(true);
-		}else if (this.score <= 60){
+		}else if (this.score <= 25){
 			Kroy.mainGameScreen.addTime(45);
-		}else if (this.score <= 80){
+		}else if (this.score <= 30){
 			Kroy.mainGameScreen.ressurectTruck();
-		}else if (this.score > 80){
+		}else if (this.score > 30){
 			Kroy.mainGameScreen.rainDance();
 		}
 	}
