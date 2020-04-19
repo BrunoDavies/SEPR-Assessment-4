@@ -222,7 +222,7 @@ public class MinigameScreen implements Screen {
 	}
 	//MINIGAME_INTEGRATION_4 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 	private void applyPowerUp(){
-		if (this.score == 0 || this.score == 1){
+		if (this.score <= 1){
 			return;
 		}else if (this.score <= 10){
 			Kroy.mainGameScreen.getPlayer().setUnlimitedWater(true);
