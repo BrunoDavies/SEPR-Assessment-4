@@ -80,8 +80,8 @@ public class FireTruck extends Entity{
 
 		firing = false;
 		//Power ups
-		defenceUp = true;
-		unlimitedWater = true;
+		defenceUp = false;
+		unlimitedWater = false;
 
 		water = new WaterStream(Vector2.Zero);
 		defenceUpIcon = new StatusIcon(statusIconPos,"DefenceUp.png");
