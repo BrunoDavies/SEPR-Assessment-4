@@ -561,7 +561,7 @@ public class GameScreen implements Screen{
 		game.batch.draw(minimap, 2, 2, 394, 350);
 
 		for (GameObject object : gameObjects) {
-			if (object instanceof Box) {
+			if (object instanceof PowerupBox) {
 				game.batch.draw(object.getTexture(), object.getX()/19, object.getY()/19, 20, 20);
 			}else {
 				game.batch.draw(object.getTexture(), object.getX() / 19, object.getY() / 19, object.getWidth() / 10,
