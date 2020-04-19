@@ -38,7 +38,7 @@ public class Pipe extends GameObject {
 	 * @param spawnPos The spawn position
 	 */
 	public Pipe(Vector2 spawnPos, Texture pipeTexture) {
-		super(spawnPos, pipeTexture, new Vector2(2000, 1200));
+		super(spawnPos, pipeTexture, new Vector2(2000, 1500));
 		Vector2 repositionedHitbox =  spawnPos;
 		repositionedHitbox.x += -1400;
 		repositionedHitbox.y += 500;
