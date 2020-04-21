@@ -23,16 +23,10 @@ public class StatusIcon extends GameObject{
         return enabled;
     }
 
-    // Moves the icon to an off map position if it is not enabled
-    public void removeIcon(){
-        enabled = false;
-        Vector2 aVeryFarAwayLocation = new Vector2(10000000,100000000);
-        setPosition(aVeryFarAwayLocation);
-    }
 
     // sets enabled to true
-    public void addIcon(){
-        enabled = true;
+    public void setEnabled(boolean state){
+        enabled = state;
     }
 
     @Override
