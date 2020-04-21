@@ -110,7 +110,7 @@ public class GameScreen implements Screen{
 			{300f, 1f, 400f, 450f},		//Range
 		};
 
-	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ----
+	// UNIQUE_FORTRESS_HEALTH_DAMAGE_8 - START OF MODIFICATION  - NPSTUDIOS - CASSIE_LILLYSTONE----
 	private float[][] fortressStats = { //Each list contains unique values for health and damage. One list for each fortress
 
             {300f, 5f},
@@ -120,7 +120,8 @@ public class GameScreen implements Screen{
             {700f, 25f},
             {800f, 30f},
     }; 
-	
+
+	// UNIQUE_FORTRESS_HEALTH_DAMAGE_8 - END OF MODIFICATION - NPSTUDIOS-----
 	
 	private int truckNum; // Identifies the truck thats selected in the menu screen
 	private FireTruck currentTruck;
@@ -367,11 +368,11 @@ public class GameScreen implements Screen{
 	 * @param num the fortress number
 	 */
 	private void fortressInit(int num) {
-		// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ----
+		// UNIQUE_FORTRESS_HEALTH_DAMAGE_9 - START OF MODIFICATION  - NPSTUDIOS - CASSIE_LILLYSTONE ----
 		Fortress tempFortress = new Fortress(fortressPositions.get(num), textures.getFortress(num), textures.getDeadFortress(num),
 				fortressSizes.get(num), textures.getBullet(), fortressStats[num]); //Added the list of stats corresponding
 		// to the fortress being made as a parameter to pass to instantiate a fortress
-		// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS] ----
+		// UNIQUE_FORTRESS_HEALTH_DAMAGE_9 - END OF MODIFICATION  - NPSTUDIOS ----
 
 		gameObjects.add(tempFortress);
 		fortresses.add(tempFortress);
@@ -1066,11 +1067,16 @@ public class GameScreen implements Screen{
 	// Deleted unused setters for fortressCount
 	// FORTRESS_COUNT_FIX_2 - END OF MODIFICATION  - NP STUDIOS
 
-    // [FORTRESS_IMPROVEMENT] - START OF MODIFICATION  - [NP_STUDIOS] - [CASSIE_LILLYSTONE] ----
+    // FORTRESS_IMPROVEMENT_2 - START OF MODIFICATION  - NP_STUDIOS - CASSIE_LILLYSTONE----
+
+	/**
+	 * Returns an ArrayList containing all the fortresses- NP STUDIOS
+	 */
+
 	public ArrayList<Fortress> getFortresses(){
 	    return fortresses;
     } //Added a getter which returns a list of fortresses, required for making fortress health improve over time
-    // [FORTRESS_IMPROVEMENT] - END OF MODIFICATION  - [NP_STUDIOS]----
+    // FORTRESS_IMPROVEMENT_2 - END OF MODIFICATION  - NP_STUDIOS----
 
 	public int getFortressesCount() {
 		return fortressesCount;

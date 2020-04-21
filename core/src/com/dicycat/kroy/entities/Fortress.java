@@ -18,9 +18,9 @@ public class Fortress extends Entity {
 
 	private BulletDispenser dispenser;
 	private Texture deadTexture;
-	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ----
+	// UNIQUE_FORTRESS_HEALTH_DAMAGE_10 - START OF MODIFICATION  - NPSTUDIOS - CASSIE_LILLYSTONE ----
 	private float fortressDamage; //Added new attribute
-	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS] ----
+	// UNIQUE_FORTRESS_HEALTH_DAMAGE_10 - END OF MODIFICATION  - NPSTUDIOS ----
 
 	/**
 	 * @param spawnPos
@@ -30,7 +30,7 @@ public class Fortress extends Entity {
 	 * @param fortressStats
 	 */
 
-	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ---
+	// UNIQUE_FORTRESS_HEALTH_DAMAGE_11 - START OF MODIFICATION  - NPSTUDIOS - CASSIE_LILLYSTONE ---
 		public Fortress(Vector2 spawnPos, Texture fortressTexture, Texture deadTexture, Vector2 size, Texture bulletTexture,
 						float[] fortressStats) { //Added fortressStats as a parameter so it passes the health and damage
 												// values for the fortress being made
@@ -46,7 +46,7 @@ public class Fortress extends Entity {
 		dispenser.addPattern(new Pattern(false, 0, 3, 100, 900, 0.02f, 1, 0.2f, bulletTexture, fortressDamage));
 		dispenser.addPattern(new Pattern(true, 0, 1, 100, 900, 0.02f, 1, 1.2f, bulletTexture, fortressDamage));
 
-		// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS] ----
+		// UNIQUE_FORTRESS_HEALTH_DAMAGE_11 - END OF MODIFICATION  - NPSTUDIOS ----
 		this.deadTexture = deadTexture;
 
 	}
