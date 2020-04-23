@@ -92,6 +92,7 @@ public class GameScreen implements Screen{
 	private Viewport gameport;
 	// MINIMAP_ADDITION_1 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE ----
 	private Texture minimap;
+	private Boolean mapToggle;
 	// MINIMAP_ADDITION_1 - END OF MODIFICATION - NPSTUDIOS
 	
 	public HUD hud;
@@ -182,6 +183,7 @@ public class GameScreen implements Screen{
 		gameMap = new TiledGameMap(); //or FitPort to make it fit into a specific width/height ratio
 		// MINIMAP_ADDITION_2 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE ----
 		minimap = new Texture("MinimapBackground.png"); //adds a texture of the map as a .png to be the minimap
+		mapToggle = true;
 		// MINIMAP_ADDITION_2 - START OF MODIFICATION - NPSTUDIOS
 		pauseWindow = new PauseWindow(game);
 		pauseWindow.visibility(false);
@@ -226,6 +228,7 @@ public class GameScreen implements Screen{
 		updateTruckStats(); //ensures that the stats are correct with current difficulty selected
 		// DIFFICULTY_2 - END OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
 
+
 		//POWERUPS_5 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		boxSpawnRate = 20;
 		boxSpawnLocations.add(new Vector2(750, 1000));
@@ -234,6 +237,7 @@ public class GameScreen implements Screen{
 		boxSpawnLocations.add(new Vector2(5500, 2675));
 
 		//POWERUPS_5 - END OF MODIFICATION - NPSTUDIOS
+
 
 		//MINIGAME_INTEGRATION - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		start = true;
@@ -405,7 +409,9 @@ public class GameScreen implements Screen{
 				hud.stage.draw();
 
 				//MINIMAP_ADDITION_3 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
-				drawMinimap();
+				if (mapToggle) {
+					drawMinimap();
+				}
 				//MINIMAP_ADDITION_3 - END OF MODIFICATION - NPSTUDIOS
 				pauseWindow.stage.draw();
 
@@ -440,6 +446,9 @@ public class GameScreen implements Screen{
 	 * Respawns the player if necessary.
 	 */
 	private void updateLoop() {
+		//MINIMAP_ADDITION_5 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
+		checkMapToggle(); // Calls a method to check if the user presses the key to toggle the minimap on or off.
+		//MINIMAP_ADDITION_5 - END OF MODIFICATION - NPSTUDIOS
         updateStatusIcons();
 		List<GameObject> toRemove = new ArrayList<GameObject>();
 		List<Vector2> patrolPositions = new ArrayList<>();
@@ -481,7 +490,8 @@ public class GameScreen implements Screen{
 		switchTrucks();
 
 		lastPatrol += Gdx.graphics.getDeltaTime();
-		if(numberOfPatrolsSpawned <= difficultyStats[difficultyChosen][patrolMaxIndex]) {
+		//UR_PATROLS_2 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+		if(numberOfPatrolsSpawned < difficultyStats[difficultyChosen][patrolMaxIndex]) {
 			if (lastPatrol >= patrolUpdateRate) {
 				lastPatrol = 0;
 
@@ -499,8 +509,11 @@ public class GameScreen implements Screen{
 
 
 				}
+				numberOfPatrolsSpawned++;
 			}
 		}
+		//UR_PATROLS_2 - END OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+
 		//POWERUPS_2 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		timeSinceLastBoxSpawn += Gdx.graphics.getDeltaTime(); //increments the timer
 		if (timeSinceLastBoxSpawn >= boxSpawnRate){
@@ -539,6 +552,14 @@ public class GameScreen implements Screen{
 	//MINIMAP_ADDITION_4 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 
 	/**
+	 * NOTs the toggle boolean.
+	 */
+	public void checkMapToggle(){
+		if (Gdx.input.isKeyJustPressed(Keys.T)){
+			mapToggle = !mapToggle;
+		}
+	}
+	/**
 	 * Draws the minimap to the bottom left hand corner of the screen.
 	 * The minimap shows all the game objects and the firetrucks.
 	 */
@@ -546,10 +567,15 @@ public class GameScreen implements Screen{
 		game.batch.begin();
 		game.batch.draw(minimap, 2, 2, 394, 350);
 
-		for (GameObject object : gameObjects){
-			game.batch.draw(object.getTexture(), object.getX()/19, object.getY()/19, object.getWidth()/10,
-					object.getHeight()/10);
-		} // Draws the fortresses and patrols to a minimap scaled down to the in the bottom left corner.
+		for (GameObject object : gameObjects) {
+			if (object instanceof PowerupBox) {
+				game.batch.draw(object.getTexture(), object.getX()/19, object.getY()/19, 20, 20);
+			}else {
+				game.batch.draw(object.getTexture(), object.getX() / 19, object.getY() / 19, object.getWidth() / 10,
+						object.getHeight() / 10);
+			}
+		}
+		// Draws the fortresses and patrols to a minimap scaled down to the in the bottom left corner.
 		for (FireTruck truck : firetrucks) {
 			if (truck.getHealthPoints() > 0) {
 				game.batch.draw(truck.getTexture(), truck.getX() / 19, truck.getY() / 19, 20, 25);
