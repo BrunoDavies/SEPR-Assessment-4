@@ -27,9 +27,10 @@ public class Pattern {
 	 * @param patternLength How many shots in the pattern
 	 * @param multi How many bullets per shot (spread)
 	 * @param cooldown Time after pattern to wait before firing the next pattern
+	 * @param damage Amount of damage to be dealt
 	 */
 
-	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ---
+	// UNIQUE_FORTRESS_HEALTH_DAMAGE_4 - START OF MODIFICATION  - NPSTUDIOS - CASSIE_LILLYSTONE ---
 	//For all Pattern constructors, added fortressDamage as a parameter and as a parameter for the instantiation of the bullets
 	// Also set aim to true for the first pattern as this would just fire straight down and not target the user
 	public Pattern(int degree, int speed, int range, float timeBetweenShots, int patternLength, int multi, float cooldown,
@@ -60,6 +61,7 @@ public class Pattern {
 	 * @param patternLength How many shots in the pattern
 	 * @param multi How many bullets per shot (spread)
 	 * @param cooldown Time after pattern to wait before firing the next pattern
+	 * @param fortressDamage Amount of damage to be dealt by fortress
 	 */
 	public Pattern(int speed, int range, float timeBetweenShots, int patternLength, int multi, float cooldown,
 				   Texture bulletTexture, float fortressDamage) {
@@ -88,6 +90,7 @@ public class Pattern {
 	 * @param timeBetweenShots Time before the next shot
 	 * @param multi How many bullets per shot (spread)
 	 * @param cooldown Time after pattern to wait before firing the next pattern
+	 * @param fortressDamage Amount of damage to be dealt by fortress
 	 */
 	public Pattern(Boolean clockwise, int startAngle, int rotations, int speed, int range, float timeBetweenShots,
 				   int multi, float cooldown, Texture bulletTexture, float fortressDamage) {
@@ -113,7 +116,7 @@ public class Pattern {
 		}
 	}
 
-	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS] ---
+	// UNIQUE_FORTRESS_HEALTH_DAMAGE_4 - END OF MODIFICATION  - NPSTUDIOS ---
 
 	/**
 	 * @param set The set of bullets to fire
