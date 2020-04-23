@@ -124,7 +124,7 @@ public class ControlsWindow {
 		table.add("");
 		table.add("");
 		table.add("");
-		table.add("(spacebar) Shoot", "default-font", "white").height(50);
+		table.add("(spacebar) Shoot [jump in minigame]", "default-font", "white").height(50);
 		table.row();
 		table.add(new Image(down)).prefSize(50,50);
 		table.add("");

@@ -49,9 +49,9 @@ public class FireTruck extends Entity{
 
 	private Vector2 statusIconPos = Vector2.Zero;
 
-    // [FORTRESS_IMPROVEMENT] - START OF MODIFICATION  - [NP_STUDIOS] - [CASSIE_LILLYSTONE] ----
+    // FORTRESS_IMPROVEMENT_3 - START OF MODIFICATION  - NP_STUDIOS - CASSIE_LILLYSTONE ----
 	private ArrayList<Fortress> fortressList; //New attribute
-    // [FORTRESS_IMPROVEMENT] - END OF MODIFICATION  - [NP_STUDIOS] -----
+    // FORTRESS_IMPROVEMENT_3 - END OF MODIFICATION  - NP_STUDIOS -----
 
 	/**
 	 * @param spawnPos
@@ -84,12 +84,8 @@ public class FireTruck extends Entity{
 		unlimitedWater = false;
 
 		water = new WaterStream(Vector2.Zero);
-
 		defenceUpIcon = new StatusIcon(statusIconPos,"DefenceUp.png");
-		Kroy.mainGameScreen.addGameObject(defenceUpIcon);
-
 		unlimitedWaterIcon = new StatusIcon(statusIconPos,"UnlimitedWater.png");
-		Kroy.mainGameScreen.addGameObject(unlimitedWaterIcon);
 
 	}
 
@@ -176,8 +172,8 @@ public class FireTruck extends Entity{
 		//Move the hit box to it's new centred position according to the sprite's position.
         hitbox.setCenter(getCentre().x, getCentre().y);
 
-		updateStatusIcons();
 		assignStatusEffectArray();
+		updateStatusIcons();
 		moveIconByFixedPoint();
 
 		// STATBAR_REFACTOR_3 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
@@ -224,11 +220,11 @@ public class FireTruck extends Entity{
 	// then adds an offset value to stop the icons from overlapping
 	private void moveIconByFixedPoint(){
 		int offPoint = 0;
-		if (defenceUpIcon.isEnabled()){
+		if (defenceUp){
 			offPoint += 15;
 			defenceUpIcon.setPosition(getCentre().add(20 - offPoint,25));
 		}
-		if (unlimitedWaterIcon.isEnabled()){
+		if (unlimitedWater){
 			offPoint += 15;
 			unlimitedWaterIcon.setPosition(getCentre().add(20 - offPoint,25));
 		}
@@ -246,18 +242,24 @@ public class FireTruck extends Entity{
 
 	private void updateStatusIcons(){
 		if (this.defenceUp){
-			if (!(this.defenceUpIcon.isEnabled())) {
-				this.defenceUpIcon.addIcon();
+			if (!defenceUpIcon.isEnabled()) {
+				defenceUpIcon = new StatusIcon(statusIconPos, "DefenceUp.png");
+				Kroy.mainGameScreen.addGameObject(defenceUpIcon);
+				defenceUpIcon.setEnabled(true);
 			}
-		} else if (this.defenceUpIcon.isEnabled()){
-			this.defenceUpIcon.removeIcon();
+		} else {
+			defenceUpIcon.setEnabled(false);
+			defenceUpIcon.setRemove(true);
 		}
 		if (this.unlimitedWater){
-			if (!(this.unlimitedWaterIcon.isEnabled())) {
-				this.unlimitedWaterIcon.addIcon();
+			if (!unlimitedWaterIcon.isEnabled()) {
+				unlimitedWaterIcon = new StatusIcon(statusIconPos, "UnlimitedWater.png");
+				Kroy.mainGameScreen.addGameObject(unlimitedWaterIcon);
+				unlimitedWaterIcon.setEnabled(true);
 			}
-		} else if (this.unlimitedWaterIcon.isEnabled()){
-			this.unlimitedWaterIcon.removeIcon();
+		} else {
+			unlimitedWaterIcon.setEnabled(false);
+			unlimitedWaterIcon.setRemove(true);
 		}
 	}
 	//POWERUPS_1 - END OF MODIFICATION - NPSTUDIOS
@@ -341,13 +343,13 @@ public class FireTruck extends Entity{
 		// Removed statbar remove code.
 		// STATBAR_REFACTOR_4 - END OF MODIFICATION  - NP STUDIOS
 
-        // [FORTRESS_IMPROVEMENT] - START OF MODIFICATION  - [NP_STUDIOS] - [CASSIE_LILLYSTONE] ----
+        // FORTRESS_IMPROVEMENT_4 - START OF MODIFICATION  - NP_STUDIOS - CASSIE_LILLYSTONE ----
         fortressList = Kroy.mainGameScreen.getFortresses(); //Create a new list which contains the fortresses
 
 
         for (Fortress fortress : fortressList){
             fortress.addHealth(10); //Add 10 to the health of each fortress each time a truck is killed - so that fortresses improve their health over time
-		// [FORTRESS_IMPROVEMENT] - END OF MODIFICATION  - [NP_STUDIOS] ----
+		// FORTRESS_IMPROVEMENT_4 - END OF MODIFICATION  - NP_STUDIOS ----
         }
 
 	} 

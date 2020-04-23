@@ -110,7 +110,7 @@ public class GameScreen implements Screen{
 			{300f, 1f, 400f, 450f},		//Range
 		};
 
-	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ----
+	// UNIQUE_FORTRESS_HEALTH_DAMAGE_8 - START OF MODIFICATION  - NPSTUDIOS - CASSIE_LILLYSTONE----
 	private float[][] fortressStats = { //Each list contains unique values for health and damage. One list for each fortress
 
             {300f, 5f},
@@ -120,7 +120,8 @@ public class GameScreen implements Screen{
             {700f, 25f},
             {800f, 30f},
     }; 
-	
+
+	// UNIQUE_FORTRESS_HEALTH_DAMAGE_8 - END OF MODIFICATION - NPSTUDIOS-----
 	
 	private int truckNum; // Identifies the truck thats selected in the menu screen
 	private FireTruck currentTruck;
@@ -158,6 +159,7 @@ public class GameScreen implements Screen{
 	private ArrayList<StatBar> healthbars = new ArrayList<StatBar>();
 	private ArrayList<StatBar> tankbars = new ArrayList<StatBar>();
 	private ArrayList<StatBar> fortressHealthBars = new ArrayList<>();
+	private ArrayList<StatusIcon> activeStatusIcons = new ArrayList<>();
 	// STATBAR_REFACTOR_6 - END OF MODIFICATION  - NP STUDIOS
 
 	//POWERUPS_4 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
@@ -196,13 +198,14 @@ public class GameScreen implements Screen{
 		this.truckNum = truckNum;
 
         timeIncreaseIcon = new StatusIcon(Vector2.Zero,"TimeIncrease.png");
-        timeIncrease = true;
+        timeIncrease = false;
         freezeEnemiesIcon = new StatusIcon(Vector2.Zero,"FreezeEnemies.png");
-        freezeEnemies = true;
+        freezeEnemies = false;
         rainDanceIcon = new StatusIcon(Vector2.Zero,"RainDance.png");
-        rainDance = true;
+        rainDance = false;
         revivedFireTruckIcon = new StatusIcon(Vector2.Zero,"Ressurected.png");
-        revivedFireTruck = true;
+        revivedFireTruck = false;
+        activeStatusIcons = new ArrayList<>();
 
 		lastPatrol = Gdx.graphics.getDeltaTime();
 		timeSinceLastBoxSpawn = Gdx.graphics.getDeltaTime();
@@ -259,34 +262,51 @@ public class GameScreen implements Screen{
 
 	// Sets the icons to enabled if they are currently active
     private void updateStatusIcons(){
-        if (timeIncrease){
-            if (!(timeIncreaseIcon.isEnabled())) {
-                timeIncreaseIcon.addIcon();
-            }
-        } else if (timeIncreaseIcon.isEnabled()){
-            timeIncreaseIcon.removeIcon();
-        }
+
+        if (timeIncrease) {
+			if (!timeIncreaseIcon.isEnabled()) {
+				timeIncreaseIcon = new StatusIcon(Vector2.Zero, "TimeIncrease.png");
+				activeStatusIcons.add(timeIncreaseIcon);
+				timeIncreaseIcon.setEnabled(true);
+			}
+		} else {
+			activeStatusIcons.remove(timeIncreaseIcon);
+        	timeIncreaseIcon.setEnabled(false);
+        	timeIncreaseIcon.setRemove(true);
+		}
         if (rainDance){
-            if (!(rainDanceIcon.isEnabled())) {
-                rainDanceIcon.addIcon();
-            }
-        } else if (rainDanceIcon.isEnabled()){
-            rainDanceIcon.removeIcon();
-        }
+			if (!rainDanceIcon.isEnabled()) {
+				rainDanceIcon = new StatusIcon(Vector2.Zero, "RainDance.png");
+				activeStatusIcons.add(rainDanceIcon);
+				rainDanceIcon.setEnabled(true);
+			}
+        } else {
+			activeStatusIcons.remove(rainDanceIcon);
+        	rainDanceIcon.setEnabled(false);
+			rainDanceIcon.setRemove(true);
+		}
         if (freezeEnemies){
-            if (!(freezeEnemiesIcon.isEnabled())) {
-                freezeEnemiesIcon.addIcon();
-            }
-        } else if (freezeEnemiesIcon.isEnabled()){
-            freezeEnemiesIcon.removeIcon();
-        }
+			if (!freezeEnemiesIcon.isEnabled()) {
+				freezeEnemiesIcon = new StatusIcon(Vector2.Zero, "FreezeEnemies.png");
+				activeStatusIcons.add(freezeEnemiesIcon);
+				freezeEnemiesIcon.setEnabled(true);
+			}
+        } else {
+        	activeStatusIcons.remove(freezeEnemiesIcon);
+        	freezeEnemiesIcon.setEnabled(false);
+			freezeEnemiesIcon.setRemove(true);
+		}
         if (revivedFireTruck){
-            if (!(revivedFireTruckIcon.isEnabled())) {
-                revivedFireTruckIcon.addIcon();
-            }
-        } else if (revivedFireTruckIcon.isEnabled()){
-            revivedFireTruckIcon.removeIcon();
-        }
+			if (!revivedFireTruckIcon.isEnabled()) {
+				revivedFireTruckIcon = new StatusIcon(Vector2.Zero, "Ressurected.png");
+				activeStatusIcons.add(revivedFireTruckIcon);
+				revivedFireTruckIcon.setEnabled(true);
+			}
+        } else {
+			activeStatusIcons.remove(revivedFireTruckIcon);
+        	revivedFireTruckIcon.setEnabled(false);
+			revivedFireTruckIcon.setRemove(true);
+		}
     }
 	//POWERUPS_6 - END OF MODIFICATION - NPSTUDIOS
 
@@ -318,6 +338,10 @@ public class GameScreen implements Screen{
 			}
 
 			gameObjects.add(new FireStation(textures.getFireStation(), textures.getFireStationDead()));
+			activeStatusIcons.add(freezeEnemiesIcon);
+			activeStatusIcons.add(revivedFireTruckIcon);
+			activeStatusIcons.add(rainDanceIcon);
+			activeStatusIcons.add(timeIncreaseIcon);
 			switchTrucks(truckNum);
 
 			// DIFFICULTY_6 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
@@ -344,11 +368,11 @@ public class GameScreen implements Screen{
 	 * @param num the fortress number
 	 */
 	private void fortressInit(int num) {
-		// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ----
+		// UNIQUE_FORTRESS_HEALTH_DAMAGE_9 - START OF MODIFICATION  - NPSTUDIOS - CASSIE_LILLYSTONE ----
 		Fortress tempFortress = new Fortress(fortressPositions.get(num), textures.getFortress(num), textures.getDeadFortress(num),
 				fortressSizes.get(num), textures.getBullet(), fortressStats[num]); //Added the list of stats corresponding
 		// to the fortress being made as a parameter to pass to instantiate a fortress
-		// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS] ----
+		// UNIQUE_FORTRESS_HEALTH_DAMAGE_9 - END OF MODIFICATION  - NPSTUDIOS ----
 
 		gameObjects.add(tempFortress);
 		fortresses.add(tempFortress);
@@ -406,8 +430,16 @@ public class GameScreen implements Screen{
 				//RENDER_ORDER - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 				gameMap.renderBuildings(gamecam); // Renders the buildings and the foreground items which are not entities, moved below renderObjects() so the firetrucks can no longer drive on the roofs.
 				//RENDER_ORDER - END OF MODIFICATION - NPSTUDIOS
-				hud.stage.draw();
 
+				game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+				game.batch.setProjectionMatrix(gamecam.combined);	//Mic:only renders the part of the map where the camera is
+				game.batch.begin();
+				for (StatusIcon icon : activeStatusIcons) {
+					icon.render(game.batch);
+				}
+				game.batch.end();
+
+				hud.stage.draw();
 				//MINIMAP_ADDITION_3 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 				if (mapToggle) {
 					drawMinimap();
@@ -582,6 +614,7 @@ public class GameScreen implements Screen{
 			}
 			//Draws the firetrucks on their relative position on the minimap. Size is not to scale to make their position obvious and clear.
 		}
+
 		game.batch.end();
 	}
 	//MINIMAP_ADDITION_4 - END OF MODIFICATION - NPSTUDIOS
@@ -590,9 +623,7 @@ public class GameScreen implements Screen{
 	 * Renders the objects in "objectsToRender" then clears the list
 	 */
 	private void renderObjects() {
-		for (GameObject object : objectsToRender) {
-			object.render(game.batch);
-		}
+
 		for (FireTruck truck : firetrucks) {
 			if(truck.isAlive()) {
 			truck.render(game.batch);
@@ -611,6 +642,12 @@ public class GameScreen implements Screen{
 			}
 		}
 
+
+		for (GameObject object : objectsToRender) {
+			object.render(game.batch);
+		}
+
+
 		// FORTRESS_COUNT_FIX_1 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
 		// Previously the game was ending when only 3 fortresses were destroyed so we added this code to
 		// fix the fortress count, ensuring the game completed at the correct point.
@@ -627,7 +664,6 @@ public class GameScreen implements Screen{
 		}
 		fortressesCount = alive;
 		// FORTRESS_COUNT_FIX_1 - END OF MODIFICATION  - NP STUDIOS
-
 
 		objectsToRender.clear();
 	}
@@ -653,6 +689,7 @@ public class GameScreen implements Screen{
 	 * Restores a dead firetruck back to the game with it's max health and water.
 	 */
 	public void resurrectTruck(){
+		revivedFireTruck = true;
 		for (FireTruck truck : firetrucks){
 			if (!truck.isAlive()){ //iterates through the list of firetrucks looking for one marked as not alive.
 				truck.setRemove(false);
@@ -682,6 +719,7 @@ public class GameScreen implements Screen{
 	 * Kills all currently spawned patrols.
 	 */
 	public void rainDance(){
+		rainDance = true;
 		for (GameObject obj : gameObjects){
 			if (obj instanceof UFO) {
 				obj.die();
@@ -694,6 +732,7 @@ public class GameScreen implements Screen{
 	 * @param time
 	 */
 	public void addTime(float time){
+		timeIncrease = true;
 		gameTimer = gameTimer + time;
 	}
 	//POWERUPS_3 - END OF MODIFICATION - NPSTUDIOS
@@ -756,20 +795,20 @@ public class GameScreen implements Screen{
 		float cameraX = Math.max(0.5f*Kroy.width*zoom, Math.min(currentTruck.getX(), 6884-(0.5f*Kroy.width*zoom)));
 		float cameraY = Math.max(0.5f*Kroy.height*zoom, Math.min(currentTruck.getY(), 6043-(0.5f*Kroy.height*zoom)));
 		gamecam.position.lerp(new Vector3(cameraX, cameraY,gamecam.position.z),0.1f);// sets the new camera position based on the current position of the FireTruck
-        Vector2 iconPosition = new Vector2(gamecam.position.x - 260, gamecam.position.y + 327);
-        if (timeIncreaseIcon.isEnabled()) {
+        Vector2 iconPosition = new Vector2(gamecam.position.x - 260, gamecam.position.y + 460);
+        if (timeIncrease) {
             timeIncreaseIcon.setPosition(iconPosition);
         }
-        if (freezeEnemiesIcon.isEnabled()){
-			iconPosition = new Vector2 (gamecam.position.x + 130, gamecam.position.y + 327);
+        if (freezeEnemies){
+			iconPosition = new Vector2 (gamecam.position.x + 250, gamecam.position.y + 460);
             freezeEnemiesIcon.setPosition(iconPosition);
         }
-        if (rainDanceIcon.isEnabled()){
-			iconPosition = new Vector2 (gamecam.position.x + 170, gamecam.position.y + 327);
+        if (rainDance){
+			iconPosition = new Vector2 (gamecam.position.x + 300, gamecam.position.y + 460);
             rainDanceIcon.setPosition(iconPosition);
         }
-        if (revivedFireTruckIcon.isEnabled()){
-			iconPosition = new Vector2 (gamecam.position.x  + 500, gamecam.position.y + 327);
+        if (revivedFireTruck){
+			iconPosition = new Vector2 (gamecam.position.x  + 350, gamecam.position.y + 460);
             revivedFireTruckIcon.setPosition(iconPosition);
         }
 		gamecam.update();
@@ -1057,11 +1096,16 @@ public class GameScreen implements Screen{
 	// Deleted unused setters for fortressCount
 	// FORTRESS_COUNT_FIX_2 - END OF MODIFICATION  - NP STUDIOS
 
-    // [FORTRESS_IMPROVEMENT] - START OF MODIFICATION  - [NP_STUDIOS] - [CASSIE_LILLYSTONE] ----
+    // FORTRESS_IMPROVEMENT_2 - START OF MODIFICATION  - NP_STUDIOS - CASSIE_LILLYSTONE----
+
+	/**
+	 * Returns an ArrayList containing all the fortresses- NP STUDIOS
+	 */
+
 	public ArrayList<Fortress> getFortresses(){
 	    return fortresses;
     } //Added a getter which returns a list of fortresses, required for making fortress health improve over time
-    // [FORTRESS_IMPROVEMENT] - END OF MODIFICATION  - [NP_STUDIOS]----
+    // FORTRESS_IMPROVEMENT_2 - END OF MODIFICATION  - NP_STUDIOS----
 
 	public int getFortressesCount() {
 		return fortressesCount;

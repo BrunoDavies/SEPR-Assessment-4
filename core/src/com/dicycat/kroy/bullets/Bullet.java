@@ -21,19 +21,20 @@ public class Bullet extends GameObject {
 	private float maxDist;		//Max distance to travel
 	private float travelDist; 	//Distance left to travel
 	private Circle hitbox;		//Bullet hit box
-	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ---
+	// UNIQUE_FORTRESS_HEALTH_DAMAGE_1 - START OF MODIFICATION  - NPSTUDIOS - CASSIE_LILLYSTONE ---
 	//Create new attribute for fortressDamage
 	private float damage;
-	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS]---
+	// UNIQUE_FORTRESS_HEALTH_DAMAGE_1 - END OF MODIFICATION  - NPSTUDIOS---
 
 	/**
 	 * @param spawnPos Position to spawn the bullet
 	 * @param direction direction the bullet will travel in
 	 * @param speed speed the bullet should travel at
 	 * @param range distance the bullet should travel before it is removed
+	 * @param damage amount of damage that is to be dealt
 	 */
 
-	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ---
+	// UNIQUE_FORTRESS_HEALTH_DAMAGE_2 - START OF MODIFICATION  - NPSTUDIOS - CASSIE_LILLYSTONE ---
 	//Added fortressDamage as a parameter and set it equal to the new attribute
 	public Bullet(Vector2 spawnPos, Vector2 direction, int speed, float range, Texture bulletTexture, float damage) {
 		// REFACTOR_6 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
@@ -46,7 +47,7 @@ public class Bullet extends GameObject {
 		maxDist = range;
 		hitbox = new Circle(spawnPos.x, spawnPos.y, 10);
 		this.damage = damage;
-		// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS]---
+		// UNIQUE_FORTRESS_HEALTH_DAMAGE_2 - END OF MODIFICATION  - NPSTUDIOS---
 	}
 
 	/**
@@ -95,14 +96,14 @@ public class Bullet extends GameObject {
 		if (truck.isAlive() && !truck.getDefenceUp()) { //the truck doesn't take damage if it has a shield powerup.
 		//POWERUPS_10 - END OF MODIFICATION - NPSTUDIOS
 			if(Intersector.overlaps(hitbox, truck.getHitbox())){
-                // [FORTRESS_IMPROVEMENT] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ---
+                // FORTRESS_IMPROVEMENT_1 - START OF MODIFICATION  - NPSTUDIOS - CASSIE_LILLYSTONE ---
 			    if (Kroy.mainGameScreen.gameTimer == 150){ //If the game is half way through then double the amount of damage applied
-                    // [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ---
+                    // UNIQUE_FORTRESS_HEALTH_DAMAGE_3 - START OF MODIFICATION  - NPSTUDIOS - CASSIE_LILLYSTONE ---
 			        truck.applyDamage((2* damage)); //Replace hardcoded value with the parameter for fortressDamage
                 } else {
 			        truck.applyDamage(damage); //Replace hardcoded value with the parameter for fortressDamage
-                } // [UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS]---
-                // [FORTRESS_IMPROVEMENT] - END OF MODIFICATION  - [NPSTUDIOS]---
+                } // UNIQUE_FORTRESS_HEALTH_DAMAGE_3 - END OF MODIFICATION  - NPSTUDIOS---
+                // FORTRESS_IMPROVEMENT_1 - END OF MODIFICATION  - NPSTUDIOS---
 				remove = true;
 				// REFACTOR_8 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
 				// Added texture disposal to prevent memory leaks as a new texture is made for each bullet now due to
