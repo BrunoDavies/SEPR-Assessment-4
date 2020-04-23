@@ -115,13 +115,5 @@ public class UFO extends Entity {
 	}
 	//POWERUPS_15 - END OF MODIFICATION - NPSTUDIOS
 
-	//UR_PATROL_1 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
-	//Override the damage method since we dont want the UFO to die but still be targeted
-	@Override
-	public void applyDamage(float damage) {
-		//It takes an int to keep the damaging/targeting loop working on all entities
-		//Return just to exit method.
-		return;
-	}
-	//UR_PATROL_1 - END OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+
 }
