@@ -64,10 +64,12 @@ public class MinigameScreen implements Screen {
 	private Texture pipeTexture;
 	//MINIGAME_INTEGRATION_4 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 	private boolean fromMenu;
+	private Texture scoreTable; // Will store an image of a table showing which powerup is activated by which range of scores in the minigame.
 
 	public MinigameScreen(Kroy _game, boolean flag) {
 		pipeTexture = new Texture("Rocks.png");
-		fromMenu = flag;
+		fromMenu = flag; //This boolean allows different code to be ran depending on if the minigame is called from the menu as it previously was, or if called from the main game as we have now adapted it to be.
+		scoreTable = new Texture("powerUpScoreTable.png");
 	//MINIGAME_INTEGRATION_4 - END OF MODIFICATION - NPSTUDIOS
 		bg = new Texture("lightBlue.png");
 		game = _game;
@@ -135,6 +137,7 @@ public class MinigameScreen implements Screen {
 			batch.setProjectionMatrix(gamecam.combined);
 			batch.begin(); // Game loop Start
 			batch.draw(map, -Kroy.width / 2, -Kroy.height / 2, Kroy.width, Kroy.height);
+			batch.draw(scoreTable,-Kroy.width / 2 + 100, -Kroy.height/4, 480, 540);
 			Animation <TextureRegion> animationReference  = player.getAnimationInFlight();
 			batch.draw(animationReference.getKeyFrame(time += delta), player.getPosition().x, player.getPosition().y, player.getTextureScale() + 70, player.getTextureScale());
 			animationReference.setPlayMode(Animation.PlayMode.LOOP);
@@ -196,11 +199,11 @@ public class MinigameScreen implements Screen {
 				dispose();
 				//MINIGAME_INTEGRATION_3 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 				if (fromMenu) {
-					game.backToMenu();
+					game.backToMenu(); // The minigame was originally wrote separate to the main game, this doesn't run our adaptions which are integrated into the main game.
 				}else{
 					//Kroy.mainGameScreen.getPlayer()
-					applyPowerUp();
-					Kroy.mainGameScreen.hud.updateScore(score*50);
+					applyPowerUp(); //A function to apply the earned power up is called.
+					Kroy.mainGameScreen.hud.updateScore(score*50); //The score from the minigame is added to the main game's score.
 					game.backToGame();
 				}
 				//MINIGAME_INTEGRATION_3 - END OF MODIFICATION - NPSTUDIOS
@@ -221,6 +224,12 @@ public class MinigameScreen implements Screen {
 		// System.out.println(score);
 	}
 	//MINIGAME_INTEGRATION_4 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
+
+	/**
+	 * Applies a specific power up to the main game
+	 * based on the score in the minigame
+	 * when called.
+	 */
 	private void applyPowerUp(){
 		if (this.score <= 1){
 			return;
@@ -233,7 +242,7 @@ public class MinigameScreen implements Screen {
 		}else if (this.score <= 25){
 			Kroy.mainGameScreen.addTime(45);
 		}else if (this.score <= 30){
-			Kroy.mainGameScreen.ressurectTruck();
+			Kroy.mainGameScreen.resurrectTruck();
 		}else if (this.score > 30){
 			Kroy.mainGameScreen.rainDance();
 		}

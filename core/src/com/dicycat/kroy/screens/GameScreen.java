@@ -547,15 +547,15 @@ public class GameScreen implements Screen{
 		//UR_PATROLS_2 - END OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
 
 		//POWERUPS_2 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
-		timeSinceLastBoxSpawn += Gdx.graphics.getDeltaTime();
+		timeSinceLastBoxSpawn += Gdx.graphics.getDeltaTime(); //increments the timer
 		if (timeSinceLastBoxSpawn >= boxSpawnRate){
-			spawnBox();
+			spawnBox();//calls the powerup box spawning function when the the timer has reached the the spawn rate
 		}
 		//The code above is a timer for the powerup box spawning
 		if (freezeEnemies){
 			freezeTimer += Gdx.graphics.getDeltaTime();
 			if (freezeTimer >= (15 + (5*(1 - difficultyChosen)))){ // The powerups are stronger on easy mode / weaker on harder difficulties
-				freezePatrols(false);
+				freezePatrols(false); //the patrols unfreeze when the timer reaches the limit
 			}
 		}
 		// The code above is a timer for how long the freeze patrols powerup lasts.
@@ -582,12 +582,19 @@ public class GameScreen implements Screen{
 	}
 
 	//MINIMAP_ADDITION_4 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
+
+	/**
+	 * NOTs the toggle boolean.
+	 */
 	public void checkMapToggle(){
 		if (Gdx.input.isKeyJustPressed(Keys.T)){
 			mapToggle = !mapToggle;
 		}
 	}
-
+	/**
+	 * Draws the minimap to the bottom left hand corner of the screen.
+	 * The minimap shows all the game objects and the firetrucks.
+	 */
 	public void drawMinimap(){
 		game.batch.begin();
 		game.batch.draw(minimap, 2, 2, 394, 350);
@@ -605,7 +612,7 @@ public class GameScreen implements Screen{
 			if (truck.getHealthPoints() > 0) {
 				game.batch.draw(truck.getTexture(), truck.getX() / 19, truck.getY() / 19, 20, 25);
 			}
-			//Draws the firetrucks on their relative position on the minimap. size is not to scale to make their position obvious and clear.
+			//Draws the firetrucks on their relative position on the minimap. Size is not to scale to make their position obvious and clear.
 		}
 
 		game.batch.end();
@@ -677,27 +684,40 @@ public class GameScreen implements Screen{
 		return currentTruck;
 	}
 	//POWERUPS_3 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
-	public void ressurectTruck(){
+
+	/**
+	 * Restores a dead firetruck back to the game with it's max health and water.
+	 */
+	public void resurrectTruck(){
 		revivedFireTruck = true;
 		for (FireTruck truck : firetrucks){
-			if (!truck.isAlive()){
+			if (!truck.isAlive()){ //iterates through the list of firetrucks looking for one marked as not alive.
 				truck.setRemove(false);
-				truck.setPosition(spawnPosition);
+				truck.setPosition(spawnPosition); //The restored firetruck's position is set to by the fire station.
 				truck.setHealthPoints(truck.getMaxHealthPoints());
 				truck.setCurrentWater(truck.getMaxWater());
-				break;
+				break; // The break stops the function from resurrect more than one firetruck.
 			}
 		}
 	}
+
+	/**
+	 * Freezes or unfreezes the patrols.
+	 * @param flag
+	 */
 	public void freezePatrols(Boolean flag){
 		freezeEnemies = flag;
-		freezeTimer = 0;
+		freezeTimer = 0; //resets the timer of how long enemies are frozen for.
 		for (GameObject obj : gameObjects){
 			if (obj instanceof UFO) {
-				((UFO) obj).setFrozen(flag);
+				((UFO) obj).setFrozen(flag); //iterates through all the game objects and when it's a patrol sets it to frozen.
 			}
 		}
 	}
+
+	/**
+	 * Kills all currently spawned patrols.
+	 */
 	public void rainDance(){
 		rainDance = true;
 		for (GameObject obj : gameObjects){
@@ -707,6 +727,10 @@ public class GameScreen implements Screen{
 		}
 	}
 
+	/**
+	 * Adds time to game's timer (the time until the fire station is destroyed).
+	 * @param time
+	 */
 	public void addTime(float time){
 		timeIncrease = true;
 		gameTimer = gameTimer + time;
@@ -714,6 +738,11 @@ public class GameScreen implements Screen{
 	//POWERUPS_3 - END OF MODIFICATION - NPSTUDIOS
 
 	//DIFFICULTY_FOR_POWERUPS - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
+
+	/**
+	 *
+	 * @return
+	 */
 	public int getDifiicultyChosesn(){
 		return difficultyChosen;
 	}

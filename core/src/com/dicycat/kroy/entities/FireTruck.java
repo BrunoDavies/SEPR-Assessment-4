@@ -202,13 +202,13 @@ public class FireTruck extends Entity{
 		if (defenceUp){
 			defenceUpTimer += Gdx.graphics.getDeltaTime(); // This if statement holds the timer for the defence powerup.
 			if (defenceUpTimer >= (15+(5*(1-Kroy.mainGameScreen.getDifiicultyChosesn())))){
-				setDefenceUp(false);
+				setDefenceUp(false); //When the timer is up the shield is deactivated.
 			}
 		}
 		if (unlimitedWater){
 			unlimitedWaterTimer += Gdx.graphics.getDeltaTime(); // This if statement holds the timer for the unlimited water powerup.
 			if (unlimitedWaterTimer >= (15+(5*(1-Kroy.mainGameScreen.getDifiicultyChosesn())))){
-				setUnlimitedWater(false);
+				setUnlimitedWater(false); //When the timer is up the water powerup is deactivated.
 			}
 		}
 		//POWERUPS_11 - END OF MODIFICATION - NPSTUDIOS
@@ -429,33 +429,40 @@ public class FireTruck extends Entity{
 
 	//POWERUPS_13 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 	/**
-	 *
+	 * Activates or deactivates the water powerup.
 	 * @param flag
 	 */
-	// Gives the fireTruck unlimited water
 	public void setUnlimitedWater(Boolean flag){
 		this.unlimitedWater = flag;
-		this.unlimitedWaterTimer = 0;
-		updateStatusIcons();
+		this.unlimitedWaterTimer = 0; //resets the timer.
+		updateStatusIcons(); //updates whether or not to display powerup icon.
 		assignStatusEffectArray();
 	}
 
+	/**
+	 * Returns if the water powerup is active or not.
+	 * @return
+	 */
 	public boolean isUnlimitedWater() {
 		return unlimitedWater;
 	}
 
 	/**
-	 *
+	 * Activates or deactivates the shield powerup.
 	 * @param flag
 	 */
 	// Make invulnerable for a period of time
 	public void setDefenceUp(Boolean flag){
 		this.defenceUp = flag;
-		this.defenceUpTimer = 0;
-		updateStatusIcons();
+		this.defenceUpTimer = 0; //rests the timer
+		updateStatusIcons(); //updates whether or not to display the powerup icon.
 		assignStatusEffectArray();
 	}
 
+	/**
+	 * Returns if the water shield is active or not.
+	 * @return
+	 */
 	public Boolean getDefenceUp(){
 		return defenceUp;
 	}
