@@ -115,8 +115,16 @@ public abstract class Entity extends GameObject{
 
 	// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS] ----
 	// DIFFICULTY_5 - START OF MODIFICATION - NP STUDIOS - BRUNO DAVIES
-	//Setter for the maxHealthPoints but also changes the current health to that value (unlike other setters
+
+	/**
+	 * Setter for the maxHealthPoints but also changes the current health to that value (unlike other setters)
+	 * @param maxHealthPoints
+	 */
+
 	public void setMaxHealthPointsForDifficulty(int maxHealthPoints) { //unconventional name to not confuse teammates.
+		if (maxHealthPoints < 0){
+			return;
+		}
 		this.maxHealthPoints = maxHealthPoints; //changes the maxHealthPoints to passed int
 		this.healthPoints=maxHealthPoints; //also set health points to this value since this setter is used after entities
 		                                  //are instantiated.

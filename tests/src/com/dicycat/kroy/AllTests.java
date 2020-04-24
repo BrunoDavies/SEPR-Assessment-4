@@ -8,9 +8,9 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
         FireStationTest.class,
         FireTruckTest.class,
-        FortressTest.class,
+//        FortressTest.class,
         GooseTest.class,
-        PipeTest.class
+//        PipeTest.class
 })
 
 public class AllTests {
