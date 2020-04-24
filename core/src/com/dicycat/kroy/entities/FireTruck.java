@@ -49,9 +49,9 @@ public class FireTruck extends Entity{
 
 	private Vector2 statusIconPos = Vector2.Zero;
 
-    // [FORTRESS_IMPROVEMENT] - START OF MODIFICATION  - [NP_STUDIOS] - [CASSIE_LILLYSTONE] ----
+    // FORTRESS_IMPROVEMENT_3 - START OF MODIFICATION  - NP_STUDIOS - CASSIE_LILLYSTONE ----
 	private ArrayList<Fortress> fortressList; //New attribute
-    // [FORTRESS_IMPROVEMENT] - END OF MODIFICATION  - [NP_STUDIOS] -----
+    // FORTRESS_IMPROVEMENT_3 - END OF MODIFICATION  - NP_STUDIOS -----
 
 	/**
 	 * @param spawnPos
@@ -84,12 +84,8 @@ public class FireTruck extends Entity{
 		unlimitedWater = false;
 
 		water = new WaterStream(Vector2.Zero);
-
 		defenceUpIcon = new StatusIcon(statusIconPos,"DefenceUp.png");
-		Kroy.mainGameScreen.addGameObject(defenceUpIcon);
-
 		unlimitedWaterIcon = new StatusIcon(statusIconPos,"UnlimitedWater.png");
-		Kroy.mainGameScreen.addGameObject(unlimitedWaterIcon);
 
 	}
 
@@ -176,8 +172,8 @@ public class FireTruck extends Entity{
 		//Move the hit box to it's new centred position according to the sprite's position.
         hitbox.setCenter(getCentre().x, getCentre().y);
 
-		updateStatusIcons();
 		assignStatusEffectArray();
+		updateStatusIcons();
 		moveIconByFixedPoint();
 
 		// STATBAR_REFACTOR_3 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
@@ -204,15 +200,15 @@ public class FireTruck extends Entity{
 		}
 		//POWERUPS_11 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		if (defenceUp){
-			defenceUpTimer += Gdx.graphics.getDeltaTime();
-			if (defenceUpTimer >= 15){
-				setDefenceUp(false);
+			defenceUpTimer += Gdx.graphics.getDeltaTime(); // This if statement holds the timer for the defence powerup.
+			if (defenceUpTimer >= (15+(5*(1-Kroy.mainGameScreen.getDifiicultyChosesn())))){
+				setDefenceUp(false); //When the timer is up the shield is deactivated.
 			}
 		}
 		if (unlimitedWater){
-			unlimitedWaterTimer += Gdx.graphics.getDeltaTime();
-			if (unlimitedWaterTimer >= 15){
-				setUnlimitedWater(false);
+			unlimitedWaterTimer += Gdx.graphics.getDeltaTime(); // This if statement holds the timer for the unlimited water powerup.
+			if (unlimitedWaterTimer >= (15+(5*(1-Kroy.mainGameScreen.getDifiicultyChosesn())))){
+				setUnlimitedWater(false); //When the timer is up the water powerup is deactivated.
 			}
 		}
 		//POWERUPS_11 - END OF MODIFICATION - NPSTUDIOS
@@ -224,11 +220,11 @@ public class FireTruck extends Entity{
 	// then adds an offset value to stop the icons from overlapping
 	private void moveIconByFixedPoint(){
 		int offPoint = 0;
-		if (defenceUpIcon.isEnabled()){
+		if (defenceUp){
 			offPoint += 15;
 			defenceUpIcon.setPosition(getCentre().add(20 - offPoint,25));
 		}
-		if (unlimitedWaterIcon.isEnabled()){
+		if (unlimitedWater){
 			offPoint += 15;
 			unlimitedWaterIcon.setPosition(getCentre().add(20 - offPoint,25));
 		}
@@ -246,18 +242,24 @@ public class FireTruck extends Entity{
 
 	private void updateStatusIcons(){
 		if (this.defenceUp){
-			if (!(this.defenceUpIcon.isEnabled())) {
-				this.defenceUpIcon.addIcon();
+			if (!defenceUpIcon.isEnabled()) {
+				defenceUpIcon = new StatusIcon(statusIconPos, "DefenceUp.png");
+				Kroy.mainGameScreen.addGameObject(defenceUpIcon);
+				defenceUpIcon.setEnabled(true);
 			}
-		} else if (this.defenceUpIcon.isEnabled()){
-			this.defenceUpIcon.removeIcon();
+		} else {
+			defenceUpIcon.setEnabled(false);
+			defenceUpIcon.setRemove(true);
 		}
 		if (this.unlimitedWater){
-			if (!(this.unlimitedWaterIcon.isEnabled())) {
-				this.unlimitedWaterIcon.addIcon();
+			if (!unlimitedWaterIcon.isEnabled()) {
+				unlimitedWaterIcon = new StatusIcon(statusIconPos, "UnlimitedWater.png");
+				Kroy.mainGameScreen.addGameObject(unlimitedWaterIcon);
+				unlimitedWaterIcon.setEnabled(true);
 			}
-		} else if (this.unlimitedWaterIcon.isEnabled()){
-			this.unlimitedWaterIcon.removeIcon();
+		} else {
+			unlimitedWaterIcon.setEnabled(false);
+			unlimitedWaterIcon.setRemove(true);
 		}
 	}
 	//POWERUPS_1 - END OF MODIFICATION - NPSTUDIOS
@@ -334,18 +336,20 @@ public class FireTruck extends Entity{
 	public void die() {
 		super.die();
 		water.setRemove(true);
+		setUnlimitedWater(false);
+		setDefenceUp(false);
 
 		// STATBAR_REFACTOR_4 - START OF MODIFICATION  - NP STUDIOS - LUCY IVATT
 		// Removed statbar remove code.
 		// STATBAR_REFACTOR_4 - END OF MODIFICATION  - NP STUDIOS
 
-        // [FORTRESS_IMPROVEMENT] - START OF MODIFICATION  - [NP_STUDIOS] - [CASSIE_LILLYSTONE] ----
+        // FORTRESS_IMPROVEMENT_4 - START OF MODIFICATION  - NP_STUDIOS - CASSIE_LILLYSTONE ----
         fortressList = Kroy.mainGameScreen.getFortresses(); //Create a new list which contains the fortresses
 
 
-        for (Object fortress : fortressList){
-            addHealth(10); //Add 10 to the health of each fortress each time a truck is killed - so that fortresses improve their health over time
-		// [FORTRESS_IMPROVEMENT] - END OF MODIFICATION  - [NP_STUDIOS] ----
+        for (Fortress fortress : fortressList){
+            fortress.addHealth(10); //Add 10 to the health of each fortress each time a truck is killed - so that fortresses improve their health over time
+		// FORTRESS_IMPROVEMENT_4 - END OF MODIFICATION  - NP_STUDIOS ----
         }
 
 	} 
@@ -425,33 +429,40 @@ public class FireTruck extends Entity{
 
 	//POWERUPS_13 - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 	/**
-	 *
+	 * Activates or deactivates the water powerup.
 	 * @param flag
 	 */
-	// Gives the fireTruck unlimited water
 	public void setUnlimitedWater(Boolean flag){
 		this.unlimitedWater = flag;
-		this.unlimitedWaterTimer = 0;
-		updateStatusIcons();
+		this.unlimitedWaterTimer = 0; //resets the timer.
+		updateStatusIcons(); //updates whether or not to display powerup icon.
 		assignStatusEffectArray();
 	}
 
+	/**
+	 * Returns if the water powerup is active or not.
+	 * @return
+	 */
 	public boolean isUnlimitedWater() {
 		return unlimitedWater;
 	}
 
 	/**
-	 *
+	 * Activates or deactivates the shield powerup.
 	 * @param flag
 	 */
 	// Make invulnerable for a period of time
 	public void setDefenceUp(Boolean flag){
 		this.defenceUp = flag;
-		this.defenceUpTimer = 0;
-		updateStatusIcons();
+		this.defenceUpTimer = 0; //rests the timer
+		updateStatusIcons(); //updates whether or not to display the powerup icon.
 		assignStatusEffectArray();
 	}
 
+	/**
+	 * Returns if the water shield is active or not.
+	 * @return
+	 */
 	public Boolean getDefenceUp(){
 		return defenceUp;
 	}

@@ -43,11 +43,11 @@ public class UFO extends Entity {
 		dispenser = new BulletDispenser(this);
 		this.frozen = false;
 		dispenser.addPattern(new Pattern(180, 300, 800, 0.1f,
-				// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - START OF MODIFICATION  - [NPSTUDIOS] - [CASSIE_LILLYSTONE] ---
+				// UNIQUE_FORTRESS_HEALTH_DAMAGE_12 - START OF MODIFICATION  - NPSTUDIOS - CASSIE_LILLYSTONE ---
 				20, 1, 0.5f, bulletTexture, 10)); //Needed to add a parameter
 																								// here for creating patterns for the
 																								//bullets of patrols. Just gave them a constant damage of 10
-				// [UNIQUE_FORTRESS_HEALTH_DAMAGE] - END OF MODIFICATION  - [NPSTUDIOS] ---
+				// UNIQUE_FORTRESS_HEALTH_DAMAGE_12 - END OF MODIFICATION  - NPSTUDIOS ---
 	}
 
 	/**
@@ -114,4 +114,14 @@ public class UFO extends Entity {
 		this.frozen = flag;
 	}
 	//POWERUPS_15 - END OF MODIFICATION - NPSTUDIOS
+
+	//UR_PATROL_1 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+	//Override the damage method since we dont want the UFO to die but still be targeted
+	@Override
+	public void applyDamage(float damage) {
+		//It takes an int to keep the damaging/targeting loop working on all entities
+		//Return just to exit method.
+		return;
+	}
+	//UR_PATROL_1 - END OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
 }
