@@ -16,7 +16,7 @@ public class EntityTest {
     //Placeholder for entity
     private entityClassTest testEntity;
 
-    //The test values needed to setup testEntity;
+    //The test values needed to setup testEntity
     private Vector2 testSpawn = new Vector2(0, 0 );
     private Texture testTexture = new Texture("fireTruck1.png");
     private Vector2 testImSize = new Vector2(50, 50 );
@@ -91,11 +91,62 @@ public class EntityTest {
         assertEquals(0f, testEntity.getMaxHealthPoints(), 0f);
     }
 
-    //TEST_ENTITY_8 -
+    //TEST_ENTITY_8 - test that addHealth() adds health to damaged entity - not hitting the max healthPoints
+    @Test
+    public void addHealthShouldAddHealthPointsNotMax() {
+        testEntity.applyDamage(20f);
+        assertEquals(testHealth-20f, testEntity.getHealthPoints(), 0f);
+        testEntity.addHealth(10f);
+        assertEquals(90f, testEntity.getHealthPoints(), 0f);
+    }
+
+    //TEST_ENTITY_9 - Test that addHealth() add health but caps at maxHealthValue
+    @Test
+    public void addHealthShouldNotAddHealthPointsOverMaxHealthPoints(){
+        testEntity.applyDamage(1f);
+        assertEquals(testHealth-1f, testEntity.getHealthPoints(), 0f);
+        testEntity.addHealth(10f);
+        assertEquals(testHealth, testEntity.getHealthPoints(), 0f);
+    }
+
+    //TEST_ENTITY_10 - Test that setHealthPoints() sets a new health points that are below max
+    @Test
+    public void setHealthPointsShouldSetNewHealthPointsBelowMax() {
+        assertEquals(100f, testEntity.getHealthPoints(), 0f);
+        testEntity.setHealthPoints(50f);
+        assertEquals(50f, testEntity.getHealthPoints(), 0f);
+    }
+
+    //TEST_ENTITY_11 - Test that setHealthPoints() does not set new health points to above max health points
+    @Test
+    public void setHealthPointsShouldNotSetAboveMaxHealthPoints(){
+        assertEquals(testEntity.getMaxHealthPoints(), testEntity.getHealthPoints(), 0f);
+        testEntity.setHealthPoints(testEntity.getMaxHealthPoints()+10f);
+        assertEquals(testEntity.getMaxHealthPoints(), testEntity.getHealthPoints(), 0f);
+    }
+
+    //TEST_ENTITY_12 - Test that applyDamage() sets the entity to be dead to then be removed
+    @Test
+    public void applyDamageShouldSetRemoveToTrueWhenBelowZero(){
+        assertFalse(testEntity.isRemove());
+        testEntity.applyDamage(testHealth*2);
+        assertTrue(testEntity.isRemove());
+    }
+
+    //TEST_ENTITY_13 - Test that applyDamage() sets entity to be not alive (isAlive() = false)
+    @Test
+    public void applyDamageShouldSetIsAliveToFalseWhenBelowZero(){
+        assertTrue(testEntity.isAlive());
+        testEntity.applyDamage(testHealth*2);
+        assertFalse(testEntity.isAlive());
+    }
+
+
+
 }
 
 //UNIT_TESTING_1 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
-// This essentially implements entity in a non-abstract state to allow for testing
+// This essentially implements Entity in a non-abstract state to allow for testing
 class entityClassTest extends Entity {
     /**
      * @param spawnPos The position the entity will spawn at.

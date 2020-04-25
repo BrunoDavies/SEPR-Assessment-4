@@ -88,15 +88,11 @@ public class Fortress extends Entity {
 	public void applyDamage(float damage) {
 		super.applyDamage(damage);
 	}
-	
-	/**
-	 * new
-	 * Apply x amount of damage to the entity
-	 */
-	public void Damage(float damage) {
-		super.applyDamage(damage);
-	}
-	
+
+	//UNIT_TESTING_4 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+	//Deleted duplicate method of applyDamage() but of a different name
+	//UNIT_TESTING_4 - END OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+
 
 	/**
 	 *
