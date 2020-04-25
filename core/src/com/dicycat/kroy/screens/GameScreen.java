@@ -241,7 +241,6 @@ public class GameScreen implements Screen{
 
 		//POWERUPS_5 - END OF MODIFICATION - NPSTUDIOS
 
-
 		//MINIGAME_INTEGRATION - START OF MODIFICATION - NPSTUDIOS - BETHANY GILMORE
 		start = true;
 		//MINIGAME_INTEGRATION - END OF MODIFICATION - NPSTUDIOS
@@ -1058,7 +1057,7 @@ public class GameScreen implements Screen{
 		saveData.putBoolean((prefix + "FREEZE_ENEMIES"), freezeEnemies);
 		saveData.putBoolean((prefix + "RAIN_DANCE"), rainDance);
 		saveData.putFloat((prefix + "GAME_TIME"), gameTimer);
-		saveData.putInteger((prefix + "DIFFICUTLY"), difficultyChosen);
+		saveData.putInteger((prefix + "DIFFICULTY"), difficultyChosen);
 		saveData.flush();
 	}
 
@@ -1072,7 +1071,10 @@ public class GameScreen implements Screen{
 			for(int i = 0; i < 6; i++){
 				fortresses.get(i).setHealthPoints(saveData.getFloat(prefix + "FORTRESS_HEALTH_" + i, fortressStats[i][0]));
 				if(fortresses.get(i).getHealthPoints() <= 0) fortresses.get(i).die();
-				firetrucks.get(i).setHealthPoints(saveData.getFloat(prefix + "TRUCK_HEALTH_" + i, 100));
+				firetrucks.get(i).setHealthPoints(saveData.getFloat(prefix + "TRUCK_HEALTH_" + i, firetrucks.get(i).getMaxHealthPoints()));
+				if (firetrucks.get(i).getHealthPoints() <= 0) {
+					firetrucks.get(i).die();
+				}
 				firetrucks.get(i).setCurrentWater(saveData.getFloat(prefix + "TRUCK_WATER_" + i, truckStats[i][2]));
 				firetrucks.get(i).setPosition(new Vector2(saveData.getFloat(prefix + "TRUCK_X_POS_" + i,
 						spawnPosition.x - 135 + (i * 50)),
