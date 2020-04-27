@@ -434,6 +434,9 @@ public class FireTruck extends Entity{
 	 */
 	public void setUnlimitedWater(Boolean flag){
 		this.unlimitedWater = flag;
+		if (flag){
+			this.setCurrentWater(this.maxWater);
+		}
 		this.unlimitedWaterTimer = 0; //resets the timer.
 		updateStatusIcons(); //updates whether or not to display powerup icon.
 		assignStatusEffectArray();
