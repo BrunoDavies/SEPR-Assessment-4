@@ -312,7 +312,7 @@ public class FireTruck extends Entity{
 		ArrayList<GameObject> outputArray = new ArrayList<GameObject>();	//create array list to output enemies in range
 
 		for (GameObject currentObject : Kroy.mainGameScreen.getGameObjects()) {		//iterates through all game objects
-			if (((currentObject instanceof Fortress) || (currentObject instanceof UFO)) && (objectInRange(currentObject))){  	//checks if entity is in range and is an enemy
+			if ((currentObject instanceof Fortress) && (objectInRange(currentObject))){  	//checks if entity is in range and is an enemy
 				outputArray.add(currentObject);												//adds the current entity to the output array list
 			}
 		}
@@ -434,6 +434,9 @@ public class FireTruck extends Entity{
 	 */
 	public void setUnlimitedWater(Boolean flag){
 		this.unlimitedWater = flag;
+		if (flag){
+			this.setCurrentWater(this.maxWater);
+		}
 		this.unlimitedWaterTimer = 0; //resets the timer.
 		updateStatusIcons(); //updates whether or not to display powerup icon.
 		assignStatusEffectArray();
