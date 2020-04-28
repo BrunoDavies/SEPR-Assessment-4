@@ -1,10 +1,11 @@
 /**
- * 
+ *
  */
 package com.dicycat.kroy;
 
 import static org.junit.Assert.*;
 
+import com.badlogic.gdx.graphics.Texture;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,12 +21,13 @@ import com.dicycat.kroy.entities.Pipe;
  */
 @RunWith(GdxTestRunner.class)
 public class PipeTest {
-	
+
 	private Pipe pipe;
-	
+	Texture testTexture = new Texture("pipe.png");
+
 	@Before
 	public void init() {
-		pipe = new Pipe(new Vector2(800,-1000));
+		pipe = new Pipe(new Vector2(800,-1000), testTexture);
 	}
 
 	/**
@@ -55,7 +57,7 @@ public class PipeTest {
 	 */
 	@Test
 	public void testGetHitboxes() {
-		Rectangle rect = new Rectangle(0, 0, 128, 880);
+		Rectangle rect = new Rectangle(400, 0, 30, 500);
 		Rectangle hitbox = pipe.getHitboxes()[0];
 		assertEquals(rect, hitbox);
 	}
@@ -70,8 +72,7 @@ public class PipeTest {
 		player.update(); // Goose hitbox updated
 		assertFalse(pipe.gameEnd(player));
 		pipe.update(); // Pipe hitbox updated to intersect with the goose
-		assertTrue(pipe.gameEnd(player));
-		
+		assertFalse(pipe.gameEnd(player));
 	}
 
 }

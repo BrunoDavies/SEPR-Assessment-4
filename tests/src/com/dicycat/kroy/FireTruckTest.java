@@ -4,46 +4,53 @@ import static org.junit.Assert.*;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+
+import com.dicycat.kroy.entities.Entity;
+import com.dicycat.kroy.entities.UFO;
+import com.dicycat.kroy.screens.GameScreen;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 
-import com.dicycat.kroy.entities.Entity;
-import com.dicycat.kroy.entities.FireStation;
+
 import com.dicycat.kroy.entities.FireTruck;
-import com.dicycat.kroy.screens.GameScreen;
 import com.badlogic.gdx.math.Rectangle;
+import org.mockito.Mockito;
+
+
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertTrue;
+
 
 @RunWith(GdxTestRunner.class)
 public class FireTruckTest {
 
-	 private FireTruck truck;
-	 private GameObject gameObject;
-	 Float[] truckStats={300f, 1.5f, 400f, 300f};
-	 
-	 @Before
-     public void setupMock() {
-		Mockito.mock(FireStation.class);
-		Mockito.mock(Kroy.class);
-		Mockito.mock(GameObject.class);
-		PowerMockito.spy(new Kroy());			
-		Mockito.mock(Entity.class);
-		Mockito.mock(GameScreen.class);
-		
-		PowerMockito.mockStatic(Kroy.class);
-		PowerMockito.constructor(Kroy.class);
-		PowerMockito.mockStatic(GameScreen.class); 
-		PowerMockito.mockStatic(GameObject.class);
-		PowerMockito.mockStatic(Entity.class);
-		 	         
-	 }	
+
+	private FireTruck testTruck;
+
+	Float[] truckStats={300f, 1.5f, 400f, 300f};
+
+	private UFO testUFO;
+
+	private Vector2 testSpawn = new Vector2(0, 0 );
+	private Texture testTexture = new Texture("ufo.png");
+	private Texture testBulletTexture = new Texture("bullet.png");
+
+
+
+
+	//UNIT_TESTING_3 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+	//Removed all mock setup.
+	//None of these were actually used in the testing. They were incorrectly used by the previous
+	//group and were slowing test execution time thus have been taken out.
+	//UNIT_TESTING_3 - END OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
 
 	@Before
 	public void init() {
-		truck = new FireTruck(new Vector2(0, 0), truckStats, new Texture("fireTruck1.png"));
+
+		testTruck = new FireTruck(new Vector2(0, 0), truckStats, new Texture("fireTruck1.png"));
+		testUFO = new UFO(testSpawn, testTexture, testBulletTexture);
 	}
 
 	/**
@@ -51,7 +58,7 @@ public class FireTruckTest {
 	 */	 
 	@Test
 	public void testInitialisation() {
-		org.junit.Assert.assertTrue(truck.getHealthPoints() == 100);
+		org.junit.Assert.assertTrue(testTruck.getHealthPoints() == 100);
 	}
 	
 	/**
@@ -61,10 +68,10 @@ public class FireTruckTest {
 	public void Hitbox() {		
 		Rectangle hitbox = new Rectangle(20, 45, 20, 20);
 
-		assertTrue((int) truck.getHitbox().x == hitbox.x);
-		assertTrue((int) truck.getHitbox().y == hitbox.y);
-		assertTrue((int) truck.getHitbox().width == hitbox.width);
-		assertTrue((int) truck.getHitbox().height == hitbox.height);
+		assertTrue((int) testTruck.getHitbox().x == hitbox.x);
+		assertTrue((int) testTruck.getHitbox().y == hitbox.y);
+		assertTrue((int) testTruck.getHitbox().width == hitbox.width);
+		assertTrue((int) testTruck.getHitbox().height == hitbox.height);
 	}
 	
 
@@ -73,27 +80,27 @@ public class FireTruckTest {
 	 */
 	@Test
 	public void testRefill() {		
-		truck.addHealth(2);
-		truck.replenish();
-		assertTrue(truck.getHealthPoints() !=  102);  //HealthPoits didn't increase because it will get more than max HealthPoits
-		assertFalse(truck.getCurrentWater() ==  302);
+		testTruck.addHealth(2);
+		testTruck.replenish();
+		assertTrue(testTruck.getHealthPoints() !=  102);  //HealthPoints didn't increase because it will get more than max HealthPoits
+		assertFalse(testTruck.getCurrentWater() ==  302);
 		
-		truck.applyDamage(10);
+		testTruck.applyDamage(10);
 		
-		assertTrue(truck.getHealthPoints() ==  90); 
+		assertTrue(testTruck.getHealthPoints() ==  90);
 		
-		truck.replenish();
-		assertTrue(truck.getHealthPoints() ==  92);   //increased this time as HealthPoits is lower than max HealthPoits
-		assertFalse(truck.getCurrentWater() ==  304);
+		testTruck.replenish();
+		assertTrue(testTruck.getHealthPoints() ==  92);   //increased this time as HealthPoits is lower than max HealthPoits
+		assertFalse(testTruck.getCurrentWater() ==  304);
 		
-		truck.addWater(96);
+		testTruck.addWater(96);
 		
-		assertFalse(truck.getCurrentWater() ==  400);
+		assertFalse(testTruck.getCurrentWater() ==  400);
 		
-		truck.replenish();
+		testTruck.replenish();
 		
-		assertTrue(truck.getHealthPoints() ==  94);   //CurretWater didn't increase because it will get more than max water
-		assertFalse(truck.getCurrentWater() ==  400);
+		assertTrue(testTruck.getHealthPoints() ==  94);   //CurretWater didn't increase because it will get more than max water
+		assertFalse(testTruck.getCurrentWater() ==  400);
 
 	}
 	
@@ -103,25 +110,86 @@ public class FireTruckTest {
 	@Test
 	public void movementTest() {
 		
-		truck.setDirection(truck.DIRECTIONS.get("nw"));
-		assertTrue(truck.getDirection() == 45);
+		testTruck.setDirection(testTruck.DIRECTIONS.get("nw"));
+		assertTrue(testTruck.getDirection() == 45);
 		
-		truck.setDirection(truck.DIRECTIONS.get("se"));
-		assertTrue(truck.getDirection() == 225);
+		testTruck.setDirection(testTruck.DIRECTIONS.get("se"));
+		assertTrue(testTruck.getDirection() == 225);
 
-		truck.setDirection(truck.DIRECTIONS.get("s"));
-		assertTrue(truck.getDirection() == 180);
+		testTruck.setDirection(testTruck.DIRECTIONS.get("s"));
+		assertTrue(testTruck.getDirection() == 180);
 			
-		truck.setDirection(truck.DIRECTIONS.get("ns"));
-		assertTrue(truck.getDirection() == null);           //it should not move when we press both up and down keys
+		testTruck.setDirection(testTruck.DIRECTIONS.get("ns"));
+		assertTrue(testTruck.getDirection() == null);           //it should not move when we press both up and down keys
 		
-		truck.setDirection(truck.DIRECTIONS.get("sn"));
-		assertTrue(truck.getDirection() == null);  
+		testTruck.setDirection(testTruck.DIRECTIONS.get("sn"));
+		assertTrue(testTruck.getDirection() == null);
 		
-		truck.setDirection(truck.DIRECTIONS.get("we"));
-		assertTrue(truck.getDirection() == null);           //it should not move when we press both left and right keys
+		testTruck.setDirection(testTruck.DIRECTIONS.get("we"));
+		assertTrue(testTruck.getDirection() == null);           //it should not move when we press both left and right keys
 		
 
 	}
 
-}          
+	//UNIT_TESTING - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+	//TEST_FIRETRUCK_1 - Test that objectInRange returns false if not in range
+	@Test
+	public void objectInRangeShouldReturnFalseIfNotInRange(){
+		FireTruck rangeTestTruck = new FireTruck(new Vector2(1000, 1000), truckStats, testTexture);
+		assertFalse(testTruck.objectInRange(rangeTestTruck));
+	}
+
+	//TEST_FIRETRUCK_2 - Test that objectInRange returns true if it is in range
+	@Test
+	public void objectInRangeShouldReturnTrueIfInRange(){
+		FireTruck rangeTestTruck = new FireTruck(testSpawn, truckStats, testTexture);
+		assertTrue(testTruck.objectInRange(rangeTestTruck));
+	}
+
+	//TEST_FIRETRUCK_3 - Test that setDefenceUp works sets the flag to passed arguement, sets time and icon
+	@Test
+	public void setDefenceUpShouldSetFlag(){
+		assertFalse(testTruck.getDefenceUp());
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

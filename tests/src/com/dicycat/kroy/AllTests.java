@@ -10,7 +10,10 @@ import org.junit.runners.Suite;
         FireTruckTest.class,
         FortressTest.class,
         GooseTest.class,
-        PipeTest.class
+        EntityTest.class,
+        GameObjectTest.class,
+        PipeTest.class,
+        UFOTest.class
 })
 
 public class AllTests {

@@ -115,5 +115,8 @@ public class UFO extends Entity {
 	}
 	//POWERUPS_15 - END OF MODIFICATION - NPSTUDIOS
 
+	public boolean getFrozen(){
+		return(frozen);
+	}
 
 }
