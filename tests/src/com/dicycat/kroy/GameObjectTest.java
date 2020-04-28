@@ -46,7 +46,7 @@ public class GameObjectTest {
 
     //TEST_GAMEOBJECT_3 - Test that changePosition() will change position to negative
     @Test
-    public void chnagePositionShouldChangeToNegativePosition(){
+    public void changePositionShouldChangeToNegativePosition(){
         Vector2 negPosition = new Vector2(-5, -10);
 
         assertEquals(testSpawn, testGameObject.getPosition());
@@ -68,9 +68,9 @@ public class GameObjectTest {
         assertEquals(new Vector2(-25, -25), testGameObject.getCentre());
     }
 
-    //TEST_GAMEOBJECT_6 - Test quickly that setRotation() sets the rotation of positive number
+    //TEST_GAMEOBJECT_6 - Test quickly that setRotation() sets the rotation
     @Test
-    public void setRotationShouldSetPositiveRotation(){
+    public void setRotationShouldSetRotation(){
         assertEquals(0, testGameObject.getRotation(), 0f);
         testGameObject.setRotation(20f);
         assertEquals(20, testGameObject.getRotation(), 0f);
@@ -86,7 +86,7 @@ public class GameObjectTest {
 
     //TEST_GAMEOBJECT_8 - Test that setRemove() will set the variable remove to the input boolean
     @Test
-    public void setRomoveShouldSetRemoveToInput(){
+    public void setRemoveShouldSetRemoveToInput(){
         assertFalse(testGameObject.isRemove());
         testGameObject.setRemove(true);
         assertTrue(testGameObject.isRemove());

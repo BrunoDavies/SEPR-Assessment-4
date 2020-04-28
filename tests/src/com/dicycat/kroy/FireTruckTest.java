@@ -2,45 +2,55 @@ package com.dicycat.kroy;
 
 import static org.junit.Assert.*;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
-import com.dicycat.kroy.entities.Fortress;
-import com.sun.org.apache.xpath.internal.operations.Bool;
+
+import com.dicycat.kroy.entities.Entity;
+import com.dicycat.kroy.entities.UFO;
+import com.dicycat.kroy.screens.GameScreen;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 
 
 import com.dicycat.kroy.entities.FireTruck;
 import com.badlogic.gdx.math.Rectangle;
+import org.mockito.Mockito;
+
 
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+
 
 @RunWith(GdxTestRunner.class)
 public class FireTruckTest {
-	private Kroy testKroy;
+
 
 	private FireTruck testTruck;
-	 Float[] truckStats={300f, 1.5f, 400f, 300f};
+
+	Float[] truckStats={300f, 1.5f, 400f, 300f};
+
+	private UFO testUFO;
+
+	private Vector2 testSpawn = new Vector2(0, 0 );
+	private Texture testTexture = new Texture("ufo.png");
+	private Texture testBulletTexture = new Texture("bullet.png");
+
+
 
 
 	//UNIT_TESTING_3 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
-	//None of these were actually used in the testing of FireTruck Class. They were incorrectly used by the previous
+	//Removed all mock setup.
+	//None of these were actually used in the testing. They were incorrectly used by the previous
 	//group and were slowing test execution time thus have been taken out.
 	//UNIT_TESTING_3 - END OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
 
 	@Before
 	public void init() {
-		testKroy = new Kroy();
+
 		testTruck = new FireTruck(new Vector2(0, 0), truckStats, new Texture("fireTruck1.png"));
+		testUFO = new UFO(testSpawn, testTexture, testBulletTexture);
 	}
 
 	/**
@@ -72,7 +82,7 @@ public class FireTruckTest {
 	public void testRefill() {		
 		testTruck.addHealth(2);
 		testTruck.replenish();
-		assertTrue(testTruck.getHealthPoints() !=  102);  //HealthPoits didn't increase because it will get more than max HealthPoits
+		assertTrue(testTruck.getHealthPoints() !=  102);  //HealthPoints didn't increase because it will get more than max HealthPoits
 		assertFalse(testTruck.getCurrentWater() ==  302);
 		
 		testTruck.applyDamage(10);
@@ -122,35 +132,6 @@ public class FireTruckTest {
 	}
 
 	//UNIT_TESTING - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
-	Vector2 testSpawn = new Vector2(0, 0);
-	Texture testTexture = new Texture("fireTruck1.png");
-
-//	@Test
-//	public void testingTest() {
-////		FireTruck mockFireTruck = new FireTruck(testSpawn, truckStats, testTexture);
-////		FireTruck spy = spy(mockFireTruck);
-////
-////		doReturn(false).when(spy).isOnCollidableTile(new Vector2(0, 0));
-////
-////		spy.moveInDirection();
-////		assertFalse(spy.isOnCollidableTile(new Vector2(0, 0)));
-////		ArrayList<Fortress> fortresses = new ArrayList<Fortress>();
-////		float[] fortressStats = new float[]{400f, 10f};
-////
-////		fortresses.add(new Fortress(new Vector2(0, 0 ), new Texture("fireTruck1.png"),
-////				new Texture("fireTruck2.png"), new Vector2(100, 100),
-////				new Texture("bullet.png"), fortressStats));
-////
-////
-////		Kroy kroy1 = mock(Kroy.class, RETURNS_DEEP_STUBS);
-////		when(kroy1.mainGameScreen.getFortresses()).thenReturn(fortresses);
-////		when(kroy1.mainGameScreen.getPlayer()).thenReturn(testTruck);
-////
-////		FireTruck testAH = kroy1.mainGameScreen.getPlayer();
-////		testAH.die();
-//
-//	}
-
 	//TEST_FIRETRUCK_1 - Test that objectInRange returns false if not in range
 	@Test
 	public void objectInRangeShouldReturnFalseIfNotInRange(){
@@ -165,24 +146,11 @@ public class FireTruckTest {
 		assertTrue(testTruck.objectInRange(rangeTestTruck));
 	}
 
-	//TEST_FIRETRUCK_3 - Test that replenish() will not fill if water is a max
+	//TEST_FIRETRUCK_3 - Test that setDefenceUp works sets the flag to passed arguement, sets time and icon
 	@Test
-	public void moveInDirectionShouldChangeYWhenNoCollisionAndDirectionSetToN() {
-		testTruck.moveInDirection();
-
-		//The calculations to find the new position
-		Vector2 movement = new Vector2(1,0);
-		movement.setAngle(0+90);
-		float posChange = 1f * Gdx.graphics.getDeltaTime();
-		Matrix3 distance = new Matrix3().setToScaling(posChange,posChange);
-		movement.nor();
-		movement.mul(distance);
-		Vector2 newPos = new Vector2(12.5f, 25.0f);
-		newPos.add(movement);
-
-		assertEquals(newPos, testTruck.getCentre());
+	public void setDefenceUpShouldSetFlag(){
+		assertFalse(testTruck.getDefenceUp());
 	}
-
 }
 
 

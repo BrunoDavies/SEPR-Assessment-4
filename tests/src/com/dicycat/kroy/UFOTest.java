@@ -34,4 +34,11 @@ public class UFOTest {
         testUFO.moveInDirection();
         assertEquals(0, 0);
     }
+
+    //TESTING - START OF TESTING - NPSTUDIOS - BRUNO DAVIES
+    @Test
+    public void setFrozenShouldChangeVariableFrozenToArgument(){
+        testUFO.setFrozen(true);
+        assertTrue(testUFO.getFrozen());
+    }
 }

@@ -43,7 +43,7 @@ public class EntityTest {
     }
 
     //TEST_ENTITY_3 - Test that applyDamage(), which (after checking the entity is alive) applies damage to an entity
-    //                  amd checks the correct amount came off.
+    //                  and checks the correct amount came off.
     @Test
     public void applyDamageShouldDecreaseHealthPointsByAmountGivenWhenEntityIsAlive(){
         assertTrue(testEntity.isAlive());
@@ -58,14 +58,14 @@ public class EntityTest {
         assertEquals(110f, testEntity.getHealthPoints(), 0f);
     }
 
-    //TEST_ENTITY_4 - Test that applyDamage() allows for 0 damage and does not remove HP.
+    //TEST_ENTITY_5 - Test that applyDamage() allows for 0 damage and does not remove HP.
     @Test
     public void applyDamageShouldNotDecreaseHealthWithZeroAttack() {
         testEntity.applyDamage(0f);
         assertEquals(100f, testEntity.getHealthPoints(), 0f);
     }
 
-    //TEST_ENTITY_5 - Test that setMaxHealthPointsForDifficulty() will set both the healthPoints (current) and the
+    //TEST_ENTITY_6 - Test that setMaxHealthPointsForDifficulty() will set both the healthPoints (current) and the
     //                  maxHealthPoints which is needed for difficulty
     @Test
     public void setMaxHealthPointsForDifficultyShouldSetBothHealth() {
@@ -74,8 +74,8 @@ public class EntityTest {
         assertEquals(150f, testEntity.getMaxHealthPoints(), 0f);
     }
 
-    //TEST_ENTITY_6 - Test that setMaxHealthPointsForDifficulty will not set negative health points and will keep the
-    //                  the current values
+    //TEST_ENTITY_7 - Test that setMaxHealthPointsForDifficulty will not set negative health points and will keep the
+    //                  current values
     @Test
     public void setMaxHealthPointsForDifficultyDoesNotSetNegative() {
         testEntity.setMaxHealthPointsForDifficulty(-10);
@@ -83,7 +83,7 @@ public class EntityTest {
         assertEquals(100f, testEntity.getHealthPoints(), 0f);
     }
 
-    //TEST_ENTITY_7 - Test that setMaxHealthPointsForDifficulty will set the value of maxHealth and healthPoints to zero
+    //TEST_ENTITY_8 - Test that setMaxHealthPointsForDifficulty will set the value of maxHealth and healthPoints to zero
     @Test
     public void setMaxHealthPointsForDifficultyWillSetZero() {
         testEntity.setMaxHealthPointsForDifficulty(0);
@@ -91,7 +91,7 @@ public class EntityTest {
         assertEquals(0f, testEntity.getMaxHealthPoints(), 0f);
     }
 
-    //TEST_ENTITY_8 - test that addHealth() adds health to damaged entity - not hitting the max healthPoints
+    //TEST_ENTITY_9 - Test that addHealth() adds health to damaged entity - not hitting the max healthPoints
     @Test
     public void addHealthShouldAddHealthPointsNotMax() {
         testEntity.applyDamage(20f);
@@ -100,7 +100,7 @@ public class EntityTest {
         assertEquals(90f, testEntity.getHealthPoints(), 0f);
     }
 
-    //TEST_ENTITY_9 - Test that addHealth() add health but caps at maxHealthValue
+    //TEST_ENTITY_10 - Test that addHealth() add health but caps at maxHealthValue
     @Test
     public void addHealthShouldNotAddHealthPointsOverMaxHealthPoints(){
         testEntity.applyDamage(1f);
@@ -109,7 +109,7 @@ public class EntityTest {
         assertEquals(testHealth, testEntity.getHealthPoints(), 0f);
     }
 
-    //TEST_ENTITY_10 - Test that setHealthPoints() sets a new health points that are below max
+    //TEST_ENTITY_11 - Test that setHealthPoints() sets a new health points that are below max
     @Test
     public void setHealthPointsShouldSetNewHealthPointsBelowMax() {
         assertEquals(100f, testEntity.getHealthPoints(), 0f);
@@ -117,7 +117,7 @@ public class EntityTest {
         assertEquals(50f, testEntity.getHealthPoints(), 0f);
     }
 
-    //TEST_ENTITY_11 - Test that setHealthPoints() does not set new health points to above max health points
+    //TEST_ENTITY_12 - Test that setHealthPoints() does not set new health points to above max health points
     @Test
     public void setHealthPointsShouldNotSetAboveMaxHealthPoints(){
         assertEquals(testEntity.getMaxHealthPoints(), testEntity.getHealthPoints(), 0f);
@@ -125,7 +125,7 @@ public class EntityTest {
         assertEquals(testEntity.getMaxHealthPoints(), testEntity.getHealthPoints(), 0f);
     }
 
-    //TEST_ENTITY_12 - Test that applyDamage() sets the entity to be dead to then be removed
+    //TEST_ENTITY_13 - Test that applyDamage() sets the entity to be dead to then be removed
     @Test
     public void applyDamageShouldSetRemoveToTrueWhenBelowZero(){
         assertFalse(testEntity.isRemove());
@@ -133,7 +133,7 @@ public class EntityTest {
         assertTrue(testEntity.isRemove());
     }
 
-    //TEST_ENTITY_13 - Test that applyDamage() sets entity to be not alive (isAlive() = false)
+    //TEST_ENTITY_14 - Test that applyDamage() sets entity to be not alive (isAlive() = false)
     @Test
     public void applyDamageShouldSetIsAliveToFalseWhenBelowZero(){
         assertTrue(testEntity.isAlive());

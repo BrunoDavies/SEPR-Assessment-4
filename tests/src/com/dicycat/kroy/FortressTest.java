@@ -6,82 +6,85 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
+
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.dicycat.kroy.GameObject;
-import com.dicycat.kroy.Kroy;
-import com.dicycat.kroy.bullets.BulletDispenser;
-import com.dicycat.kroy.entities.Entity;
-import com.dicycat.kroy.entities.FireStation;
+
 import com.dicycat.kroy.entities.Fortress;
-import com.dicycat.kroy.misc.StatBar;
-import com.dicycat.kroy.screens.GameScreen;
-import static org.junit.Assert.*;
-@PrepareForTest( Fortress.class )
+
 @RunWith(GdxTestRunner.class)
 public class FortressTest {
 
-	@Mock BulletDispenser dispenser;
-	@Mock StatBar healthBar;
-
-	@Mock Vector2 spawnPos = new Vector2(new Vector2(2903, 3211));
-	@Mock Texture fortressTexture = new Texture("cliffords tower.png");
-	@Mock Texture deadTexture = new Texture("cliffords tower dead.png");
-	@Mock Vector2 size = new Vector2(new Vector2(256, 218));
+	Vector2 spawnPos = new Vector2(new Vector2(2903, 3211));
+	Texture fortressTexture = new Texture("cliffords tower.png");
+	Texture deadTexture = new Texture("cliffords tower dead.png");
+	Texture bulletTexture = new Texture("bullet.png");
+	Vector2 size = new Vector2(new Vector2(256, 218));
 	float[] fortressStats = new float[]{400f, 10f};
 
-	@Mock
 	private Fortress fortress;
 
-	//UNIT_TESTING_5 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
-// 	As mentioned in the report, their use of mocking was incorrect and not used thus we deleted it which also helps
-//	Execution time
-	//UNIT_TESTING_5 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+	//UNIT_TESTING_M - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+	//Removed all mock setup.
+	//None of these were actually used in the testing. They were incorrectly used by the previous
+	//group and were slowing test execution time thus have been taken out.
+	// UNIT_TESTING_M - END OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
 
+	//UNIT_TESTING_7 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+	//Changed the fortress initialization to use the already defined variables. The previous group had set up the
+	//variables but not used them.
 	@Before
 	public void init() {
-		fortress=new Fortress(new Vector2(0, 0 ), new Texture("fireTruck1.png"),
-                new Texture("fireTruck2.png"), new Vector2(100, 100),
-                new Texture("bullet.png"), fortressStats);
+		fortress=new Fortress(spawnPos, fortressTexture, deadTexture, new Vector2(100, 100), bulletTexture,
+									fortressStats);
 	}
+	//UNIT_TESTING_7 - END OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
 
-	/**
-	 * Check the Fortress was built at the right place
-	 */
+
+	//UNIT_TESTING_8 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+	//Modified their 'location()' test so that it does not test multiple methods in one test and has a more appropriate
+	//name given what it is testing. They also tested .getCentre() incorrectly causing fails in previous test
+
 	@Test
-	public void location() {
+	public void setPositionShouldSetTheCorrectPosition() {
 		fortress.setPosition(new Vector2(3021, 3320));
 		assertEquals(new Vector2(3021, 3320), fortress.getPosition());
-//		assertTrue(fortress.getCentre().x==3031);
-//		assertTrue(fortress.getCentre().y==3320);
-
 	}
 
+	@Test
+	public void setPositionShouldSetNewPositionAndReturnCorrectCentre(){
+		fortress.setPosition(new Vector2(3021, 3320));
+		assertEquals(3071, fortress.getCentre().x, 0f);
+		assertEquals(3370, fortress.getCentre().y, 0f);
+
+	}
+	//UNIT_TESTING_8 - END OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+
+	//UNIT_TESTING_9 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+	//Incorrect naming
 	/**
 	 * HealthPoints should decrease when user call the Damage function
 	 */
 	@Test
-    public void takeDamage() {
+    public void takeDamageShouldResultInCorrectDecreaseInHealth() {
 		assertEquals(400, fortress.getHealthPoints(),0f);
         fortress.applyDamage(5);
         assertEquals(395, fortress.getHealthPoints(), 0f);
     }
+	//UNIT_TESTING_9 - END OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
 
+	//UNIT_TESTING_10 - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
+	//Incorrect naming and usage of assertTrue
 	/**
 	 * Fortress should become disable when it dies
 	 */
 	@Test
-	public void deathCheck() {
+	public void deathShouldChangeDisplayableTheFortress() {
 		fortress.death();
-		assertTrue(fortress.isDisplayable()==true);
+		assertTrue(fortress.isDisplayable());
 	}
 
-    //TESTING - START OF MODIFICATION - NPSTUDIOS - BRUNO DAVIES
 
 
 
